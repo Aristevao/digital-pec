@@ -4,7 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,8 @@ public class JwtTokenUtil implements Serializable {
 	private static final long serialVersionUID = -2550185165626007488L;
 
 	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+
+	private Set<String> blacklistedTokens = new HashSet<>();
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -73,5 +77,18 @@ public class JwtTokenUtil implements Serializable {
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+
+	public void addToBlacklist(String token) {
+		blacklistedTokens.add(token);
+	}
+
+	public boolean isBlacklisted(String token) {
+		return blacklistedTokens.contains(token);
+	}
+
+	// Method to invalidate token (for logout)
+	public void invalidateToken(String token) {
+		addToBlacklist(token);
 	}
 }

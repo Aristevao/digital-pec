@@ -1,6 +1,7 @@
 package com.fho.digitalpec.security.authentication;
 
 import com.fho.digitalpec.security.authentication.dto.JwtRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,18 @@ public class JwtAuthenticationController {
         log.info("Authentication successful for username '{}' using JWT token authentication.", authenticationRequest.getUsername());
 
         return ResponseEntity.ok().headers(headers).build();
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            // Remove "Bearer " prefix
+            token = token.substring(7);
+            // Invalidate token
+            jwtTokenUtil.invalidateToken(token);
+        }
+        return ResponseEntity.ok("Logout successful.");
     }
 
     private void authenticate(String username, String password) throws Exception {

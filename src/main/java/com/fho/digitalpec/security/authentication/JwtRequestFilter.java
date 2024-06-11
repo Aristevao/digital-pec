@@ -49,6 +49,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Once we get the token validate it
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // Check if token is blacklisted
+            if (jwtTokenUtil.isBlacklisted(jwtToken)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is blacklisted");
+                return;
+            }
+
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
             // if token is valid configure Spring Security to manually set authentication
