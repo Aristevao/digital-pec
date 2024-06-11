@@ -50,13 +50,13 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("logout")
+    @PostMapping("logoff")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
-            // Remove "Bearer " prefix
             token = token.substring(7);
-            // Invalidate token
+
+            log.info("Logging out user: '{}'.", jwtTokenUtil.getUsernameFromToken(token));
             jwtTokenUtil.invalidateToken(token);
         }
         return ResponseEntity.ok("Logout successful.");
