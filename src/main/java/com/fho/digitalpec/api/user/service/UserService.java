@@ -8,6 +8,7 @@ import com.fho.digitalpec.exception.ResourceNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,15 @@ public class UserService {
     private final MessageSource messageSource;
     private final UserRepository repository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public void create(User entity) {
-        repository.save(entity);
+        String hashedPassword = passwordEncoder.encode(entity.getPassword());
+        entity.setPassword(hashedPassword);
+
+        User user = repository.save(entity);
+
+        log.info("Successfully created user '{}'.", user.getId());
     }
 
     public Page<User> findAll(Pageable pageable) {

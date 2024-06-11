@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
@@ -29,6 +32,7 @@ public class JwtAuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        log.info("Authentication attempt for username '{}' initiated.", authenticationRequest.getUsername());
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -39,6 +43,8 @@ public class JwtAuthenticationController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
+
+        log.info("Authentication successful for username '{}' using JWT token authentication.", authenticationRequest.getUsername());
 
         return ResponseEntity.ok().headers(headers).build();
     }

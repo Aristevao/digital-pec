@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,9 +37,10 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<?> create(@Valid @RequestBody UserDTO dto) {
         log.info("Creating user. Payload: {}.", dto);
         service.create(mapper.toEntity(dto));
+        return ResponseEntity.ok("User created successfully.");
     }
 
     @PutMapping("{id}")
