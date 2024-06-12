@@ -5,11 +5,9 @@ import com.fho.digitalpec.api.notification.dto.NotificationDTO;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.mapper.NotificationMapper;
 import com.fho.digitalpec.api.notification.service.NotificationService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +22,6 @@ public class NotificationController implements NotificationApi {
 
     private final NotificationService service;
     private final NotificationMapper mapper;
-
-    @Override
-    public void create(@Valid @RequestBody NotificationDTO dto) {
-        log.info("Creating notification. Payload: '{}'.", dto);
-        service.create(mapper.toEntity(dto));
-    }
 
     @Override
     public Page<NotificationDTO> findAll(Pageable pageable) {

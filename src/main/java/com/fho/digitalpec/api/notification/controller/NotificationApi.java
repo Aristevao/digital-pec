@@ -4,24 +4,16 @@ import com.fho.digitalpec.api.notification.dto.NotificationDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Tag(name = "Notification API", description = "API for managing notifications")
 public interface NotificationApi {
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a new notification", description = "Creates a new notification with the provided data")
-    void create(@Valid @RequestBody NotificationDTO dto);
 
     @GetMapping
     @Operation(summary = "Find all notifications", description = "Returns a paginated list of all notifications")

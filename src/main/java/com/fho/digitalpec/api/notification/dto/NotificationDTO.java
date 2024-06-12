@@ -2,7 +2,7 @@ package com.fho.digitalpec.api.notification.dto;
 
 import java.time.LocalDateTime;
 
-import com.fho.digitalpec.api.user.entity.User;
+import com.fho.digitalpec.utils.mapper.SimpleDTO;
 
 import lombok.Data;
 
@@ -13,7 +13,6 @@ public class NotificationDTO {
     private String title;
     private String message;
     private Boolean isRead;
-    private User user;
+    private SimpleDTO user;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
