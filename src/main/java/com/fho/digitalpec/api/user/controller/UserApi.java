@@ -46,6 +46,10 @@ public interface UserApi {
     @Operation(summary = "Get user by ID", description = "Returns the details of a user by its ID")
     UserDTO findById(@Parameter(description = "ID of the user to be fetched") @PathVariable Long id);
 
+    @GetMapping("/logged-user")
+    @Operation(summary = "Get logged user", description = "Returns the logged user username")
+    String getLoggedUser();
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a user", description = "Deletes a user by its ID")

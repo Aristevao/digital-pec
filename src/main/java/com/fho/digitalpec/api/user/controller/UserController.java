@@ -7,6 +7,7 @@ import com.fho.digitalpec.api.user.dto.UserDTO;
 import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.api.user.mapper.UserMapper;
 import com.fho.digitalpec.api.user.service.UserService;
+import com.fho.digitalpec.security.authentication.LoggedUserUtil;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class UserController implements UserApi {
 
     private final UserService service;
     private final UserMapper mapper;
+    private final LoggedUserUtil loggedUserUtil;
 
     @Override
     public ResponseEntity<?> create(@Valid @RequestBody UserDTO dto) {
@@ -61,6 +63,14 @@ public class UserController implements UserApi {
         log.info("Getting user with id: {}.", id);
         User user = service.findById(id);
         return mapper.toDto(user);
+    }
+
+    @Override
+    public String getLoggedUser() {
+        log.info("Getting logged user username.");
+        String username = loggedUserUtil.getLoggedUser().getUsername();
+        Long id = loggedUserUtil.getLoggedUserId();
+        return "Logged-in User: " + username;
     }
 
     @Override
