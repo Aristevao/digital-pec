@@ -5,6 +5,7 @@ import java.util.List;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.repository.NotificationRepository;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
+import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,14 +38,16 @@ public class NotificationService {
     }
 
     public void markAsRead(Long id) {
-        Long loggedUserId = 1L;
+        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+
         Notification notification = repository.findByIdAndUserId(id, loggedUserId);
         notification.setIsRead(Boolean.TRUE);
+
         create(notification);
     }
 
     public void markAllAsRead() {
-        Long loggedUserId = 1L;
+        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
 
         List<Notification> notifications = repository.findByUserId(loggedUserId);
         notifications.forEach(notification -> notification.setIsRead(Boolean.TRUE));

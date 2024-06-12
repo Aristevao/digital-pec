@@ -7,7 +7,7 @@ import com.fho.digitalpec.api.user.dto.UserDTO;
 import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.api.user.mapper.UserMapper;
 import com.fho.digitalpec.api.user.service.UserService;
-import com.fho.digitalpec.security.authentication.LoggedUserUtil;
+import com.fho.digitalpec.security.authentication.LoggedUser;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -67,7 +67,7 @@ public class UserController implements UserApi {
     @Override
     public String getLoggedUser() {
         log.info("Getting logged user username.");
-        String username = LoggedUserUtil.getLoggedInUser().getUsername();
+        String username = LoggedUser.getLoggedInUser().getUsername();
         return "Logged-in User: " + username;
     }
 
