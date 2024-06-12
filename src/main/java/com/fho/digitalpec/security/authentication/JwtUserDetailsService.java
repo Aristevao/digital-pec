@@ -2,8 +2,8 @@ package com.fho.digitalpec.security.authentication;
 
 import java.util.ArrayList;
 
+import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.api.user.repository.UserRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,11 +19,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.fho.digitalpec.api.user.entity.User user = userRepository.findByEmail(username);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
+        return new CustomUserDetails(user.getId(), user.getEmail(), user.getEmail(), user.getPassword(), new ArrayList<>());
     }
 }

@@ -29,7 +29,6 @@ public class UserController implements UserApi {
 
     private final UserService service;
     private final UserMapper mapper;
-    private final LoggedUserUtil loggedUserUtil;
 
     @Override
     public ResponseEntity<?> create(@Valid @RequestBody UserDTO dto) {
@@ -68,8 +67,7 @@ public class UserController implements UserApi {
     @Override
     public String getLoggedUser() {
         log.info("Getting logged user username.");
-        String username = loggedUserUtil.getLoggedUser().getUsername();
-        Long id = loggedUserUtil.getLoggedUserId();
+        String username = LoggedUserUtil.getLoggedInUser().getUsername();
         return "Logged-in User: " + username;
     }
 

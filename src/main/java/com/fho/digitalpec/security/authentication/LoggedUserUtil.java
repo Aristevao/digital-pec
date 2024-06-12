@@ -1,31 +1,19 @@
 package com.fho.digitalpec.security.authentication;
 
+import com.fho.digitalpec.exception.UserNotAuthenticatedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-@Component
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class LoggedUserUtil {
 
-    public UserDetails getLoggedUser() {
+    public static CustomUserDetails getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            return (UserDetails) authentication.getPrincipal();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails) {
+            return customUserDetails;
         }
-        return null;
-    }
-
-    public Long getLoggedUserId() {
-        UserDetails userDetails = getLoggedUser();
-        if (userDetails != null && userDetails instanceof CustomUserDetails) {
-            return ((CustomUserDetails) userDetails).getId();
-        }
-        return null;
-    }
-
-    public String getLoggedUsername() {
-        UserDetails userDetails = getLoggedUser();
-        return userDetails != null ? userDetails.getUsername() : null;
+        throw new UserNotAuthenticatedException("User is not authenticated");
     }
 }
