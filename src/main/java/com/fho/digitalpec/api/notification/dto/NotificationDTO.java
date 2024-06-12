@@ -15,4 +15,5 @@ public class NotificationDTO {
     private Boolean isRead;
     private User user;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
