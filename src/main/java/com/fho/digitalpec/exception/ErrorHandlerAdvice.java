@@ -31,6 +31,7 @@ public class ErrorHandlerAdvice {
         return ErrorResponse.builder()
                 .code(e.getErrorCode())
                 .message(e.getMessage())
+                .path(request.getRequestURI())
                 .build();
     }
 
@@ -43,16 +44,15 @@ public class ErrorHandlerAdvice {
         String id = Objects.nonNull(e.getId()) ? e.getId().toString() : null;
 
         List<ErrorResponse.ErrorDetail> errorDetail = new ArrayList<>();
-        if (Objects.nonNull(id)) {
-            errorDetail.add(ErrorResponse.ErrorDetail.builder()
-                    .path("id")
-                    .message(id)
-                    .build());
-        }
+        errorDetail.add(ErrorResponse.ErrorDetail.builder()
+                .path(request.getRequestURI())
+                .detail(id)
+                .build());
 
         return ErrorResponse.builder()
                 .code(e.getErrorCode())
                 .message(e.getMessage())
+                .path(request.getRequestURI())
                 .details(errorDetail)
                 .build();
     }
@@ -65,6 +65,7 @@ public class ErrorHandlerAdvice {
 
         return ErrorResponse.builder()
                 .message(e.getMessage())
+                .path(request.getRequestURI())
                 .code(ErrorCode.ACCESS_DENIED)
                 .build();
     }
@@ -106,7 +107,7 @@ public class ErrorHandlerAdvice {
     private ErrorResponse.ErrorDetail mapToFieldErrorDetail(FieldError fieldError) {
         return ErrorResponse.ErrorDetail.builder()
                 .path(fieldError.getField())
-                .message(String.format("Value: '%s'. Errors: '%s'.",
+                .detail(String.format("Value: '%s'. Errors: '%s'.",
                         fieldError.getRejectedValue(), fieldError.getDefaultMessage()))
                 .build();
     }

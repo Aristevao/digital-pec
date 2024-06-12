@@ -20,22 +20,25 @@ public class ErrorResponse {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String code;
 
-    @JsonIgnoreProperties({"cause", "trace", "stackTrace", "localizedMessage", "suppressed"})
-    private Throwable error;
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<ErrorDetail> details;
+    private String path;
 
     @Builder.Default
     private ZonedDateTime datetime = ZonedDateTime.now();
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<ErrorDetail> details;
+
+    @JsonIgnoreProperties({"cause", "trace", "stackTrace", "localizedMessage", "suppressed"})
+    private Throwable error;
 
     @Getter
     @Builder
     public static class ErrorDetail {
         private String path;
-        private String message;
+        private String detail;
     }
 }
