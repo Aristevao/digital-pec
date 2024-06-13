@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fho.digitalpec.api.animal.entity.Animal;
-import com.fho.digitalpec.api.animalvaccine.entity.NextApplicationDate;
 import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,8 +22,7 @@ public class AnimalVaccineDTO {
 
     private Boolean completed;
 
-    @NotNull
     private LocalDate applicationDate;
 
-    private List<NextApplicationDate> nextApplicationDates;
+    private List<LocalDate> nextApplicationDates;
 }

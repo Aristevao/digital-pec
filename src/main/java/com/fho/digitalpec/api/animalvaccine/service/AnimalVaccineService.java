@@ -1,10 +1,18 @@
 package com.fho.digitalpec.api.animalvaccine.service;
 
+import static java.lang.Boolean.FALSE;
+
+import java.time.LocalDate;
+
+import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineRepository;
+import com.fho.digitalpec.exception.ResourceNotFoundException;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +22,55 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AnimalVaccineService {
 
+    private final MessageSource messageSource;
     private final AnimalVaccineRepository repository;
+    private final NextApplicationDateService nextApplicationDateService;
 
-    public void create(AnimalVaccine entity) {
-        repository.save(entity);
+    @Transactional
+    public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
+        if (entity.getApplicationDate() == null) {
+            entity.setApplicationDate(LocalDate.now());
+        }
+
+        if (!dto.getNextApplicationDates().isEmpty()) {
+            entity.setCompleted(FALSE);
+        }
+
+        AnimalVaccine animalVaccine = repository.save(entity);
+
+        nextApplicationDateService.create(animalVaccine, dto);
+    }
+
+    public void update(Long id, AnimalVaccineDTO dto) {
+        AnimalVaccine entity = findById(id);
+
+        if (dto.getApplicationDate() != null) {
+            entity.setApplicationDate(dto.getApplicationDate());
+        }
+
+        AnimalVaccine animalVaccine = repository.save(entity);
+
+        nextApplicationDateService.create(animalVaccine, dto);
     }
 
     public Page<AnimalVaccine> findAll(Pageable pageable) {
         Page<AnimalVaccine> animalVaccineLists = repository.findAll(pageable);
         log.info("Fetched {} AnimalVaccines.", animalVaccineLists.getContent().size());
         return animalVaccineLists;
+    }
+
+    public AnimalVaccine findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(messageSource, AnimalVaccine.class, id));
+    }
+
+    public void deleteById(Long id) {
+        findById(id);
+        repository.deleteById(id);
+        log.info("AnimalVaccine '{}' was successfully deleted.", id);
+    }
+
+    public void save(AnimalVaccine entity) {
+        repository.save(entity);
     }
 }

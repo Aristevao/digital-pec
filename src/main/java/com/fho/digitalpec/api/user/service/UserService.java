@@ -19,10 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserService {
 
-
     private final MessageSource messageSource;
     private final UserRepository repository;
-
     private final PasswordEncoder passwordEncoder;
 
     public void create(User entity) {
@@ -32,6 +30,12 @@ public class UserService {
         User user = repository.save(entity);
 
         log.info("Successfully created user '{}'.", user.getId());
+    }
+
+    public void update(Long id, User entity) {
+        findById(id);
+        entity.setId(id);
+        repository.save(entity);
     }
 
     public Page<User> findAll(Pageable pageable) {
@@ -55,11 +59,5 @@ public class UserService {
         findById(id);
         repository.deleteById(id);
         log.info("User '{}' was successfully deleted.", id);
-    }
-
-    public void update(Long id, User entity) {
-        findById(id);
-        entity.setId(id);
-        repository.save(entity);
     }
 }
