@@ -23,7 +23,7 @@ public class AnimalSpecification implements Specification<Animal> {
     public Predicate toPredicate(Root<Animal> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Predicate predicate = criteriaBuilder.conjunction();
 
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         Join<Animal, User> userJoin = root.join("user");
         predicate = criteriaBuilder.and(predicate,
                 criteriaBuilder.equal(userJoin.get("id"), loggedUserId));

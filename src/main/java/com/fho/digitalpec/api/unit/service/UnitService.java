@@ -33,7 +33,7 @@ public class UnitService {
     public void create(Unit entity) {
         validateNameUniqueness(entity, null);
 
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
 
         repository.save(entity);
@@ -92,5 +92,4 @@ public class UnitService {
                     }
                 });
     }
-
 }

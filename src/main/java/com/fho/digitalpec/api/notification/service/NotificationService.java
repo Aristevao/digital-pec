@@ -32,14 +32,14 @@ public class NotificationService {
     }
 
     public Page<Notification> findAll(Pageable pageable) {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         Page<Notification> notifications = repository.findByUserId(loggedUserId, pageable);
         log.info("Fetched {} Notifications.", notifications.getContent().size());
         return notifications;
     }
 
     public Notification findById(Long id) {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         Notification notification = repository.findByIdAndUserId(id, loggedUserId);
 
         if (notification == null) {
@@ -58,7 +58,7 @@ public class NotificationService {
 
     @Transactional
     public void markAllAsRead() {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
 
         List<Notification> notifications = repository.findByUserId(loggedUserId);
         notifications.forEach(notification -> notification.setIsRead(TRUE));

@@ -37,7 +37,7 @@ public class AnimalService {
     public void create(Animal entity) {
         validateIdentificationUniqueness(entity, null);
 
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
 
         specieService.create(entity);
@@ -70,14 +70,14 @@ public class AnimalService {
     }
 
     public List<Animal> listAll() {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         List<Animal> animals = repository.findAllByUserIdOrderByNameAsc(loggedUserId);
         log.info("Fetched {} Animals.", animals.size());
         return animals;
     }
 
     public Animal findById(Long id) {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
         return repository.findByIdAndUserId(id, loggedUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Animal.class, id));
     }

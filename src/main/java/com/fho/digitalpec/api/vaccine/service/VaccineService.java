@@ -1,10 +1,16 @@
 package com.fho.digitalpec.api.vaccine.service;
 
+import static java.lang.String.format;
+
 import java.util.List;
 
+import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import com.fho.digitalpec.api.vaccine.repository.VaccineRepository;
+import com.fho.digitalpec.exception.ConflictException;
+import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
+import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +27,26 @@ public class VaccineService {
 
     private final VaccineRepository repository;
     private final MessageSource messageSource;
+    private final UserService userService;
 
     @Transactional
     public void create(Vaccine entity) {
+        validateNameUniqueness(entity, null);
+
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        entity.setUser(userService.findById(loggedUserId));
+
         Vaccine vaccine = repository.save(entity);
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
+    }
+
+    public void update(Long id, Vaccine entity) {
+        findById(id);
+
+        validateNameUniqueness(entity, id);
+
+        entity.setId(id);
+        repository.save(entity);
     }
 
     public Page<Vaccine> findAll(Pageable pageable) {
@@ -51,16 +72,20 @@ public class VaccineService {
         log.info("Vaccine '{}' was successfully deleted.", id);
     }
 
-    public void update(Long id, Vaccine entity) {
-        findById(id);
-        entity.setId(id);
-        repository.save(entity);
-    }
-
     public void updateName(Long id, String name) {
         Vaccine vaccine = findById(id);
         vaccine.setName(name);
         repository.save(vaccine);
         log.info("Vaccine '{}' was successfully updated.", id);
+    }
+
+    private void validateNameUniqueness(Vaccine entity, Long id) {
+        repository.findByName(entity.getName())
+                .ifPresent(vaccine -> {
+                    if (!vaccine.getId().equals(id)) {
+                        throw new ConflictException(ErrorCode.DUPLICATED_UNIT_NAME,
+                                format("An vaccine with the same name already exists: '%s'.", entity.getName()));
+                    }
+                });
     }
 }
