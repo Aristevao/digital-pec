@@ -3,6 +3,7 @@ package com.fho.digitalpec.api.vaccine.entity;
 import java.util.List;
 
 import com.fho.digitalpec.api.specie.entity.Specie;
+import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.utils.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import lombok.Data;
@@ -41,4 +43,8 @@ public class Vaccine implements BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "specie_id")
     )
     private List<Specie> species;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
