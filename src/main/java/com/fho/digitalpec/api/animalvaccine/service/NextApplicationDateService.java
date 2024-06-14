@@ -24,6 +24,7 @@ public class NextApplicationDateService {
         this.animalVaccineService = animalVaccineService;
     }
 
+    @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
         List<LocalDate> nextApplicationLocalDates = dto.getNextApplicationDates();
         if (!nextApplicationLocalDates.isEmpty()) {

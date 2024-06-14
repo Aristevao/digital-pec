@@ -4,8 +4,10 @@ import static java.lang.String.format;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.repository.AnimalRepository;
+import com.fho.digitalpec.api.animal.repository.AnimalSpecification;
 import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
@@ -16,6 +18,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +33,14 @@ public class AnimalService {
     private final SpecieService specieService;
     private final UserService userService;
 
+    @Transactional
     public void create(Animal entity) {
         validateIdentificationUniqueness(entity, null);
 
-        specieService.create(entity.getSpecie());
-
         Long loggedUserId = LoggedUser.getLoggedInUser().getId();
         entity.setUser(userService.findById(loggedUserId));
+
+        specieService.create(entity);
 
         repository.save(entity);
 
@@ -57,10 +61,10 @@ public class AnimalService {
         repository.save(entity);
     }
 
-    public Page<Animal> findAll(Pageable pageable) {
-        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+    public Page<Animal> findAll(AnimalCriteria criteria, Pageable pageable) {
+        AnimalSpecification specification = new AnimalSpecification(criteria);
+        Page<Animal> animals = repository.findAll(specification, pageable);
 
-        Page<Animal> animals = repository.findAll(pageable);
         log.info("Fetched {} Animals.", animals.getContent().size());
         return animals;
     }

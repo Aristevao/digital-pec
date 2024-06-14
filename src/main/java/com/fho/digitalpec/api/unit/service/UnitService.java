@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class UnitService {
     private final UnitRepository repository;
     private final UserService userService;
 
+    @Transactional
     public void create(Unit entity) {
         validateNameUniqueness(entity, null);
 

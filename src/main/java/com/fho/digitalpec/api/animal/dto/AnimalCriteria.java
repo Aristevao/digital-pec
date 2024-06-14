@@ -7,7 +7,7 @@ import com.fho.digitalpec.api.animal.entity.Sex;
 import lombok.Data;
 
 @Data
-public class AnimalFilterDTO {
+public class AnimalCriteria {
 
     private String name;
     private String identification;
@@ -16,4 +16,5 @@ public class AnimalFilterDTO {
     private LocalDate birthdate;
     private LocalDate registrationDate;
     private String description;
+    private Long unitId;
 }

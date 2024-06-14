@@ -3,6 +3,7 @@ package com.fho.digitalpec.api.animal.controller;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.dto.AnimalDTO;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.mapper.AnimalMapper;
@@ -42,9 +43,9 @@ public class AnimalController implements AnimalApi {
     }
 
     @Override
-    public Page<AnimalDTO> findAll(Pageable pageable) {
+    public Page<AnimalDTO> findAll(AnimalCriteria criteria, Pageable pageable) {
         log.info("Finding all animals.");
-        return service.findAll(pageable).map(mapper::toDto);
+        return service.findAll(criteria, pageable).map(mapper::toDto);
     }
 
     @Override

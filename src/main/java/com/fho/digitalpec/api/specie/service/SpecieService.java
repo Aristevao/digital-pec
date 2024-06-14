@@ -2,6 +2,7 @@ package com.fho.digitalpec.api.specie.service;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.specie.entity.Specie;
 import com.fho.digitalpec.api.specie.repository.SpecieRepository;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,17 @@ public class SpecieService {
 
     private final SpecieRepository repository;
 
-    public void create(String name) {
-        Specie existingSpecie = repository.findByName(name);
+    public void create(Animal entity) {
+        Specie existingSpecie = repository.findByName(entity.getSpecie());
 
         if (existingSpecie == null) {
-            Specie specie = repository.save(new Specie(name));
-            log.info("Specie '{}' was successfully created.", specie.getId());
+            Specie specie = Specie.builder()
+                    .name(entity.getSpecie())
+                    .user(entity.getUser())
+                    .build();
+
+            Specie persisted = repository.save(specie);
+            log.info("Specie '{}' was successfully created.", persisted.getId());
         }
     }
 

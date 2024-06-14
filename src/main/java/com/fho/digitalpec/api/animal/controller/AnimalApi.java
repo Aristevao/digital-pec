@@ -2,6 +2,7 @@ package com.fho.digitalpec.api.animal.controller;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.dto.AnimalDTO;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +36,7 @@ public interface AnimalApi {
 
     @GetMapping
     @Operation(summary = "Find all animals", description = "Returns a paginated list of all animals")
-    Page<AnimalDTO> findAll(Pageable pageable);
+    Page<AnimalDTO> findAll(AnimalCriteria criteria, Pageable pageable);
 
     @GetMapping("list")
     @Operation(summary = "List all active animals", description = "Returns a list of all active animals")

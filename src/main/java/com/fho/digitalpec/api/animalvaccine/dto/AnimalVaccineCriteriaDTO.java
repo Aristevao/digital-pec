@@ -10,7 +10,7 @@ import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import lombok.Data;
 
 @Data
-public class AnimalVaccineFilterDTO {
+public class AnimalVaccineCriteriaDTO {
 
     private Animal animal;
     private Vaccine vaccine;
