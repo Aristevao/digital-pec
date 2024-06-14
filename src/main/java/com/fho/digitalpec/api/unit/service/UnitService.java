@@ -4,12 +4,13 @@ import static java.lang.String.format;
 
 import java.util.List;
 
-import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.unit.entity.Unit;
 import com.fho.digitalpec.api.unit.repository.UnitRepository;
+import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
+import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +26,36 @@ public class UnitService {
 
     private final MessageSource messageSource;
     private final UnitRepository repository;
-    private final SpecieService specieService;
+    private final UserService userService;
 
     public void create(Unit entity) {
-        Unit unit = repository.save(entity);
-        log.info("Unit '{}' was successfully created.", unit.getId());
+        validateNameUniqueness(entity, null);
+
+        Long loggedUserId = LoggedUser.getLoggedInUser().getId();
+        entity.setUser(userService.findById(loggedUserId));
+
+        repository.save(entity);
+
+//        TODO: Upload picture to S3
+//        if (Objects.nonNull(dto.getPicture())) {
+//            unitFileStorage.uploadImage(unit.getId(), dto.getPicture());
+//        }
+    }
+
+    public void update(Long id, Unit entity) {
+        Unit unit = findById(id);
+
+        validateNameUniqueness(entity, id);
+
+        if (unit.getAddress().getNumber().equals(entity.getAddress().getNumber()) &&
+                unit.getAddress().getZipcode().equals(entity.getAddress().getZipcode())) {
+            entity.setAddress(unit.getAddress());
+        }
+
+        entity.setId(id);
+        entity.setUser(unit.getUser());
+
+        repository.save(entity);
     }
 
     public Page<Unit> findAll(Pageable pageable) {
@@ -55,9 +81,14 @@ public class UnitService {
         log.info("Unit '{}' was successfully deleted.", id);
     }
 
-    public void update(Long id, Unit entity) {
-        findById(id);
-        entity.setId(id);
-        repository.save(entity);
+    private void validateNameUniqueness(Unit entity, Long id) {
+        repository.findByName(entity.getName())
+                .ifPresent(unit -> {
+                    if (!unit.getId().equals(id)) {
+                        throw new ConflictException(ErrorCode.DUPLICATED_UNIT_NAME,
+                                format("An unit with the same name already exists: '%s'.", entity.getName()));
+                    }
+                });
     }
+
 }

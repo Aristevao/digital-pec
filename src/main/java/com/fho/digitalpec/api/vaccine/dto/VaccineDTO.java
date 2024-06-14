@@ -14,6 +14,6 @@ public class VaccineDTO {
     @Size(max = 80)
     private String name;
 
-    @Size(max = 1000)
+    @Size(max = 500)
     private String description;
 }

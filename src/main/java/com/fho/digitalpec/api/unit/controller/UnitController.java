@@ -11,8 +11,8 @@ import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,13 +29,13 @@ public class UnitController implements UnitApi {
     private final UnitMapper mapper;
 
     @Override
-    public void create(@Valid @RequestBody UnitDTO dto) {
+    public void create(@Valid @ModelAttribute UnitDTO dto) {
         log.info("Creating unit. Payload: {}.", dto);
         service.create(mapper.toEntity(dto));
     }
 
     @Override
-    public void update(@PathVariable Long id, @Valid @RequestBody UnitDTO dto) {
+    public void update(@PathVariable Long id, @Valid @ModelAttribute UnitDTO dto) {
         log.info("Updating unit {}. Payload: {}.", id, dto);
         service.update(id, mapper.toEntity(dto));
     }

@@ -3,6 +3,7 @@ package com.fho.digitalpec.api.animal.entity;
 import java.time.LocalDate;
 
 import com.fho.digitalpec.api.unit.entity.Unit;
+import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.utils.entity.AuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,4 +61,8 @@ public class Animal extends AuditableEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "unit_id")
     private Unit unit;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

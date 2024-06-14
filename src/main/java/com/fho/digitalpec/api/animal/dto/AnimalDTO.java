@@ -3,9 +3,11 @@ package com.fho.digitalpec.api.animal.dto;
 import java.time.LocalDate;
 
 import com.fho.digitalpec.api.animal.entity.Sex;
+import com.fho.digitalpec.api.unit.entity.Unit;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -14,11 +16,11 @@ public class AnimalDTO {
 
     private Long id;
 
-    @NotNull
     @Size(max = 80)
     private String name;
 
-    @Size(max = 50)
+    @NotNull
+    @Size(max = 80)
     private String identification;
 
     @Size(max = 80)
@@ -27,16 +29,18 @@ public class AnimalDTO {
     @Size(max = 80)
     private String breed;
 
-    @NotNull
     private Sex sex;
 
-    @NotNull
     private LocalDate birthdate;
 
-    @NotNull
     @PastOrPresent
     private LocalDate registrationDate;
 
-    @Size(max = 1000)
+    @Size(max = 500)
     private String description;
+
+    @NotNull
+    private Unit unit;
+
+    private MultipartFile picture;
 }

@@ -11,8 +11,8 @@ import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,13 +30,13 @@ public class AnimalController implements AnimalApi {
     private final AnimalMapper mapper;
 
     @Override
-    public void create(@Valid @RequestBody AnimalDTO dto) {
+    public void create(@Valid @ModelAttribute AnimalDTO dto) {
         log.info("Creating animal. Payload: {}.", dto);
         service.create(mapper.toEntity(dto));
     }
 
     @Override
-    public void update(@PathVariable Long id, @Valid @RequestBody AnimalDTO dto) {
+    public void update(@PathVariable Long id, @Valid @ModelAttribute AnimalDTO dto) {
         log.info("Updating animal {}. Payload: {}.", id, dto);
         service.update(id, mapper.toEntity(dto));
     }

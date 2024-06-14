@@ -11,5 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
     Optional<Animal> findByIdentification(String identification);
-    List<Animal> findAllByOrderByNameAsc();
+
+    List<Animal> findAllByUserIdOrderByNameAsc(Long userId);
+
+    Optional<Animal> findByIdAndUserId(Long id, Long userId);
 }

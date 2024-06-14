@@ -7,4 +7,5 @@ public final class ErrorCode {
     public static final String SPRING_VALIDATION = "VALIDATION_ERROR";
     public static final String DUPLICATED_ANIMAL_ID = "DUPLICATED_ANIMAL_ID";
     public static final String USER_NOT_AUTHENTICATED = "USER_NOT_AUTHENTICATED";
+    public static final String DUPLICATED_UNIT_NAME = "DUPLICATED_UNIT_NAME";
 }

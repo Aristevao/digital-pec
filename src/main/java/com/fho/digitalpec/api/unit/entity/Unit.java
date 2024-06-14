@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.unit.entity;
 
 import com.fho.digitalpec.api.address.entity.Address;
+import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.utils.entity.AuditableEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -29,10 +31,17 @@ public class Unit extends AuditableEntity<Long> {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(name = "picture", length = 1024)
+    private String picture;
+
     @Column(length = 500)
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
