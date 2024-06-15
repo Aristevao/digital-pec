@@ -4,9 +4,11 @@ import static java.lang.Boolean.FALSE;
 
 import java.time.LocalDate;
 
+import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineCriteria;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineRepository;
+import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineSpecification;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -53,8 +55,10 @@ public class AnimalVaccineService {
         nextApplicationDateService.create(animalVaccine, dto);
     }
 
-    public Page<AnimalVaccine> findAll(Pageable pageable) {
-        Page<AnimalVaccine> animalVaccineLists = repository.findAll(pageable);
+    public Page<AnimalVaccine> findAll(AnimalVaccineCriteria criteria, Pageable pageable) {
+        AnimalVaccineSpecification specification = new AnimalVaccineSpecification(criteria);
+        Page<AnimalVaccine> animalVaccineLists = repository.findAll(specification, pageable);
+
         log.info("Fetched {} AnimalVaccines.", animalVaccineLists.getContent().size());
         return animalVaccineLists;
     }

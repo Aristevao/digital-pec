@@ -2,6 +2,7 @@ package com.fho.digitalpec.api.vaccine.controller;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
 import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +43,7 @@ public interface VaccineApi {
 
     @GetMapping
     @Operation(summary = "Find all vaccines", description = "Returns a paginated list of all vaccines")
-    Page<VaccineDTO> findAll(Pageable pageable);
+    Page<VaccineDTO> findAll(VaccineCriteria criteria, Pageable pageable);
 
     @GetMapping("list")
     @Operation(summary = "List all active vaccines", description = "Returns a list of all active vaccines")

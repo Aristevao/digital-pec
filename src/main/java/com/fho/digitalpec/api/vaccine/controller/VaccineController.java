@@ -3,6 +3,7 @@ package com.fho.digitalpec.api.vaccine.controller;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
 import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
 import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import com.fho.digitalpec.api.vaccine.mapper.VaccineMapper;
@@ -31,7 +32,7 @@ public class VaccineController implements VaccineApi {
     @Override
     public void create(@Valid @RequestBody VaccineDTO dto) {
         log.info("Creating vaccine. Payload: {}.", dto);
-        service.create(mapper.toEntity(dto));
+        service.create(mapper.toEntity(dto), dto);
     }
 
     @Override
@@ -47,9 +48,9 @@ public class VaccineController implements VaccineApi {
     }
 
     @Override
-    public Page<VaccineDTO> findAll(Pageable pageable) {
+    public Page<VaccineDTO> findAll(VaccineCriteria criteria, Pageable pageable) {
         log.info("Finding all vaccines.");
-        return service.findAll(pageable).map(mapper::toDto);
+        return service.findAll(criteria, pageable).map(mapper::toDto);
     }
 
     @Override

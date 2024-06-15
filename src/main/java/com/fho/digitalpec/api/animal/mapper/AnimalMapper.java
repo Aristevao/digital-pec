@@ -21,4 +21,20 @@ public interface AnimalMapper extends DataMapper<Animal, AnimalDTO> {
     default MultipartFile toMultipartFile(String picture) {
         return null;
     }
+//
+//    default Specie toSpecie(String specie) {
+//        if (specie != null) {
+//            return Specie.builder()
+//                    .name(specie)
+//                    .build();
+//        }
+//        return null;
+//    }
+//
+//    default String toSpecie(Specie specie) {
+//        if (specie != null) {
+//            return specie.getName();
+//        }
+//        return null;
+//    }
 }

@@ -2,6 +2,7 @@ package com.fho.digitalpec.api.animal.entity;
 
 import java.time.LocalDate;
 
+import com.fho.digitalpec.api.specie.entity.Specie;
 import com.fho.digitalpec.api.unit.entity.Unit;
 import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.utils.entity.AuditableEntity;
@@ -37,7 +38,7 @@ public class Animal extends AuditableEntity<Long> {
     private String identification;
 
     @Column(name = "specie", length = 80)
-    private String specie;
+    private Specie specie;
 
     @Column(name = "breed", length = 80)
     private String breed;

@@ -8,6 +8,7 @@ import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.repository.AnimalRepository;
 import com.fho.digitalpec.api.animal.repository.AnimalSpecification;
+import com.fho.digitalpec.api.specie.entity.Specie;
 import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
@@ -40,7 +41,8 @@ public class AnimalService {
         Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
 
-        specieService.create(entity);
+        Specie specie = specieService.create(entity);
+        entity.setSpecie(specie);
 
         repository.save(entity);
 
