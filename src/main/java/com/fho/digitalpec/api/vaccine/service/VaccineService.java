@@ -4,7 +4,6 @@ import static java.lang.String.format;
 
 import java.util.List;
 
-import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
 import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
@@ -32,7 +31,6 @@ public class VaccineService {
     private final VaccineRepository repository;
     private final MessageSource messageSource;
     private final UserService userService;
-    private final SpecieService specieService;
 
     @Transactional
     public void create(Vaccine entity, VaccineDTO dto) {
@@ -40,8 +38,6 @@ public class VaccineService {
 
         Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
-
-        specieService.create(entity, dto);
 
         Vaccine vaccine = repository.save(entity);
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());

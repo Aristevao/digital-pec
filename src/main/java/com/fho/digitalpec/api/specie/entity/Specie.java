@@ -1,7 +1,6 @@
 package com.fho.digitalpec.api.specie.entity;
 
 import com.fho.digitalpec.api.user.entity.User;
-import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import com.fho.digitalpec.utils.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,10 +33,6 @@ public class Specie implements BaseEntity<Long> {
 
     @Column(name = "name", nullable = false, length = 80, unique = true)
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "vaccine_id")
-    private Vaccine vaccine;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

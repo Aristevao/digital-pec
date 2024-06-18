@@ -3,7 +3,6 @@ package com.fho.digitalpec.api.animal.dto;
 import java.time.LocalDate;
 
 import com.fho.digitalpec.api.animal.entity.Sex;
-import com.fho.digitalpec.api.specie.entity.Specie;
 import com.fho.digitalpec.api.unit.entity.Unit;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -24,7 +23,8 @@ public class AnimalDTO {
     @Size(max = 80)
     private String identification;
 
-    private Specie specie;
+    @Size(max = 80)
+    private String specie;
 
     @Size(max = 80)
     private String breed;
