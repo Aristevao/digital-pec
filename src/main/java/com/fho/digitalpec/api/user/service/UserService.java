@@ -1,9 +1,13 @@
 package com.fho.digitalpec.api.user.service;
 
+import static java.lang.String.format;
+
 import java.util.List;
 
 import com.fho.digitalpec.api.user.entity.User;
 import com.fho.digitalpec.api.user.repository.UserRepository;
+import com.fho.digitalpec.exception.ConflictException;
+import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,8 @@ public class UserService {
 
     @Transactional
     public void create(User entity) {
+        validateUniqueness(entity, null);
+
         String hashedPassword = passwordEncoder.encode(entity.getPassword());
         entity.setPassword(hashedPassword);
 
@@ -36,6 +42,9 @@ public class UserService {
 
     public void update(Long id, User entity) {
         findById(id);
+
+        validateUniqueness(entity, id);
+
         entity.setId(id);
         repository.save(entity);
     }
@@ -61,5 +70,15 @@ public class UserService {
         findById(id);
         repository.deleteById(id);
         log.info("User '{}' was successfully deleted.", id);
+    }
+
+    private void validateUniqueness(User entity, Long id) {
+        repository.findByEmail(entity.getEmail())
+                .ifPresent(animal -> {
+                    if (!animal.getId().equals(id)) {
+                        throw new ConflictException(ErrorCode.DUPLICATED_ANIMAL_ID,
+                                format("An user with the same e-mail already exists: '%s'.", entity.getEmail()));
+                    }
+                });
     }
 }
