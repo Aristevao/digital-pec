@@ -33,19 +33,22 @@ public class SpecieService {
         }
     }
 
-    public void create(Vaccine entity, VaccineDTO dto) {
-        dto.getSpecies().stream()
+    public List<Specie> create(Vaccine entity, VaccineDTO dto) {
+        return dto.getSpecies().stream()
                 .distinct()
-                .forEach(specie -> {
-                    Specie existingSpecie = repository.findByName(specie);
-                    if (existingSpecie == null) {
+                .map(specie -> {
+                    Specie existingSpecie = repository.findByName(specie.getName());
+                    if (existingSpecie != null) {
+                        return existingSpecie;
+                    } else {
                         Specie newSpecie = Specie.builder()
-                                .name(specie)
+                                .name(specie.getName())
                                 .user(entity.getUser())
                                 .build();
-                        repository.save(newSpecie);
+                        return repository.save(newSpecie);
                     }
-                });
+                })
+                .toList();
     }
 
     public List<Specie> listAll() {

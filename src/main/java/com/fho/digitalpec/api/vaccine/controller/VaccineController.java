@@ -50,7 +50,7 @@ public class VaccineController implements VaccineApi {
     @Override
     public Page<VaccineDTO> findAll(VaccineCriteria criteria, Pageable pageable) {
         log.info("Finding all vaccines.");
-        return service.findAll(criteria, pageable).map(mapper::toDto);
+        return service.findAll(criteria, pageable);
     }
 
     @Override
