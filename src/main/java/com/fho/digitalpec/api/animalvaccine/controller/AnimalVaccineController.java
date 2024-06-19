@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.animalvaccine.controller;
 
 
+import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineCriteria;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
 import com.fho.digitalpec.api.animalvaccine.mapper.AnimalVaccineMapper;
@@ -38,9 +39,9 @@ public class AnimalVaccineController implements AnimalVaccineApi {
     }
 
     @Override
-    public Page<AnimalVaccineDTO> findAll(Pageable pageable) {
+    public Page<AnimalVaccineDTO> findAll(AnimalVaccineCriteria criteria, Pageable pageable) {
         log.info("Finding all AnimalVaccines.");
-        return service.findAll(pageable).map(mapper::toDto);
+        return service.findAll(criteria, pageable).map(mapper::toDto);
     }
 
     @Override

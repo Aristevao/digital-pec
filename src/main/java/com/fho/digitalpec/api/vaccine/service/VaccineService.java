@@ -5,8 +5,13 @@ import static java.lang.String.format;
 import java.util.List;
 
 import com.fho.digitalpec.api.user.service.UserService;
+import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
+import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
 import com.fho.digitalpec.api.vaccine.entity.Vaccine;
+import com.fho.digitalpec.api.vaccine.entity.VaccineSpecie;
+import com.fho.digitalpec.api.vaccine.mapper.VaccineMapper;
 import com.fho.digitalpec.api.vaccine.repository.VaccineRepository;
+import com.fho.digitalpec.api.vaccine.repository.VaccineSpecification;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
@@ -28,15 +33,19 @@ public class VaccineService {
     private final VaccineRepository repository;
     private final MessageSource messageSource;
     private final UserService userService;
+    private final VaccineSpecieService vaccineSpecieService;
+    private final VaccineMapper mapper;
 
     @Transactional
-    public void create(Vaccine entity) {
+    public void create(Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, null);
 
         Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
 
         Vaccine vaccine = repository.save(entity);
+
+        vaccineSpecieService.create(entity, dto);
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
     }
 
@@ -49,10 +58,15 @@ public class VaccineService {
         repository.save(entity);
     }
 
-    public Page<Vaccine> findAll(Pageable pageable) {
-        Page<Vaccine> vaccines = repository.findAll(pageable);
+    public Page<VaccineDTO> findAll(VaccineCriteria criteria, Pageable pageable) {
+        VaccineSpecification specification = new VaccineSpecification(criteria);
+        Page<Vaccine> vaccines = repository.findAll(specification, pageable);
+
+        List<Long> vaccineIds = vaccines.map(Vaccine::getId).stream().toList();
+        List<VaccineSpecie> vaccineSpecies = vaccineSpecieService.findByVaccineIdIn(vaccineIds);
+
         log.info("Fetched {} Vaccines.", vaccines.getContent().size());
-        return vaccines;
+        return mapper.toDto(vaccines, vaccineSpecies);
     }
 
     public List<Vaccine> listAll() {

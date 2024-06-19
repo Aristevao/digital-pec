@@ -1,5 +1,6 @@
 package com.fho.digitalpec.api.animalvaccine.controller;
 
+import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineCriteria;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +33,7 @@ public interface AnimalVaccineApi {
 
     @GetMapping
     @Operation(summary = "Find all animal vaccines", description = "Returns a paginated list of all animal vaccines")
-    Page<AnimalVaccineDTO> findAll(Pageable pageable);
+    Page<AnimalVaccineDTO> findAll(AnimalVaccineCriteria criteria, Pageable pageable);
 
     @GetMapping("{id}")
     @Operation(summary = "Get animal vaccine by ID", description = "Returns the details of a animal vaccine by its ID")

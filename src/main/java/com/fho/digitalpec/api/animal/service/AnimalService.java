@@ -9,6 +9,7 @@ import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.repository.AnimalRepository;
 import com.fho.digitalpec.api.animal.repository.AnimalSpecification;
 import com.fho.digitalpec.api.specie.service.SpecieService;
+import com.fho.digitalpec.api.unit.service.UnitService;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
@@ -32,10 +33,13 @@ public class AnimalService {
     private final AnimalRepository repository;
     private final SpecieService specieService;
     private final UserService userService;
+    private final UnitService unitService;
 
     @Transactional
     public void create(Animal entity) {
         validateIdentificationUniqueness(entity, null);
+
+        unitService.findById(entity.getUnit().getId());
 
         Long loggedUserId = LoggedUser.getLoggedInUserId();
         entity.setUser(userService.findById(loggedUserId));
