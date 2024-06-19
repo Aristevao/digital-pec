@@ -3,8 +3,7 @@ package com.fho.digitalpec.api.animalvaccine.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fho.digitalpec.api.animal.entity.Animal;
-import com.fho.digitalpec.api.vaccine.entity.Vaccine;
+import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -15,10 +14,10 @@ public class AnimalVaccineDTO {
     private Long id;
 
     @NotNull
-    private Animal animal;
+    private SimpleDTO animal;
 
     @NotNull
-    private Vaccine vaccine;
+    private SimpleDTO vaccine;
 
     private Boolean completed;
 

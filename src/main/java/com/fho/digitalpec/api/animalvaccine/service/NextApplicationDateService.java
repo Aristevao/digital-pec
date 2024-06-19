@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.animalvaccine.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
@@ -25,17 +26,17 @@ public class NextApplicationDateService {
     }
 
     @Transactional
-    public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
+    public List<NextApplicationDate> create(AnimalVaccine entity, AnimalVaccineDTO dto) {
         List<LocalDate> nextApplicationLocalDates = dto.getNextApplicationDates();
         if (!nextApplicationLocalDates.isEmpty()) {
-            List<NextApplicationDate> nextApplicationDates = nextApplicationLocalDates.stream()
+            return nextApplicationLocalDates.stream()
                     .map(localDate -> NextApplicationDate.builder()
                             .animalVaccine(entity)
                             .applicationDate(localDate)
                             .build())
                     .toList();
-            repository.saveAll(nextApplicationDates);
         }
+        return Collections.emptyList();
     }
 
     @Transactional

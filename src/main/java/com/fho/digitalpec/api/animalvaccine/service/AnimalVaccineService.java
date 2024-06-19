@@ -3,10 +3,12 @@ package com.fho.digitalpec.api.animalvaccine.service;
 import static java.lang.Boolean.FALSE;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineCriteria;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
+import com.fho.digitalpec.api.animalvaccine.entity.NextApplicationDate;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineRepository;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineSpecification;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
@@ -38,9 +40,10 @@ public class AnimalVaccineService {
             entity.setCompleted(FALSE);
         }
 
-        AnimalVaccine animalVaccine = repository.save(entity);
+        List<NextApplicationDate> nextApplicationDates = nextApplicationDateService.create(entity, dto);
+        entity.setNextApplicationDates(nextApplicationDates);
 
-        nextApplicationDateService.create(animalVaccine, dto);
+        repository.save(entity);
     }
 
     public void update(Long id, AnimalVaccineDTO dto) {
