@@ -26,7 +26,7 @@ public class NotificationService {
     private final MessageSource messageSource;
     private final NotificationRepository repository;
 
-    public void create(Notification entity) {
+    public void sendSendVaccineApplicationReminder(Notification entity) {
         entity.setIsRead(FALSE);
         repository.save(entity);
     }
