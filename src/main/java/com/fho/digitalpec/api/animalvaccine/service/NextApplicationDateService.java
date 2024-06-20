@@ -63,10 +63,6 @@ public class NextApplicationDateService {
                 .toList();
     }
 
-    public List<NextApplicationDate> findNextApplicationDates() {
-        return repository.findNextVaccinationDatesIn4DaysInterval();
-    }
-
     private void deleteRemovedApplicationDates(Long entityId, List<LocalDate> newNextApplicationDate, List<LocalDate> existingNextApplicationDates) {
         List<LocalDate> datesToRemove = existingNextApplicationDates.stream()
                 .filter(existingNextApplicationDate -> !newNextApplicationDate.contains(existingNextApplicationDate))

@@ -80,4 +80,10 @@ public class AnimalVaccineService {
     public void save(AnimalVaccine entity) {
         repository.save(entity);
     }
+
+    public List<AnimalVaccine> findNextApplicationDates() {
+        LocalDate now = LocalDate.now();
+        LocalDate fourDaysFromNow = now.plusDays(4);
+        return repository.findNextVaccinationDatesIn4DaysInterval(fourDaysFromNow);
+    }
 }

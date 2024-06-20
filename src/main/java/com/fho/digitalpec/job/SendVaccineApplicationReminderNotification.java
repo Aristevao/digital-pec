@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fho.digitalpec.api.animal.entity.Animal;
+import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
 import com.fho.digitalpec.api.animalvaccine.entity.NextApplicationDate;
-import com.fho.digitalpec.api.animalvaccine.service.NextApplicationDateService;
+import com.fho.digitalpec.api.animalvaccine.service.AnimalVaccineService;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.service.NotificationService;
 import com.fho.digitalpec.api.user.entity.User;
@@ -21,18 +22,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SendVaccineApplicationReminderNotification {
 
-    private final NextApplicationDateService nextApplicationDateService;
+    private final AnimalVaccineService animalVaccineService;
     private final NotificationService notificationService;
 
-    //    @Scheduled(cron = "0 0 3 * * ?", zone = "UTC")
-    @Scheduled(cron = "0/60 * * * * MON-FRI", zone = "UTC")
+    @Scheduled(cron = "0 0 3 * * ?", zone = "UTC")
     public void run() {
         log.info("[Task start] Sending vaccine application reminder notifications.");
 
         try {
-            List<NextApplicationDate> nextApplicationDates = nextApplicationDateService.findNextApplicationDates();
+            List<AnimalVaccine> animalVaccines = animalVaccineService.findNextApplicationDates();
 
-            nextApplicationDates.forEach(this::sendReminderNotification);
+            animalVaccines.forEach(this::sendReminderNotification);
 
         } catch (Exception e) {
             log.error("Error occurred while sending vaccine application reminder notifications.", e);
@@ -41,10 +41,10 @@ public class SendVaccineApplicationReminderNotification {
         log.info("[Task end] Sending vaccine application reminder notifications.");
     }
 
-    private void sendReminderNotification(NextApplicationDate nextApplicationDate) {
+    private void sendReminderNotification(AnimalVaccine animalVaccine) {
         try {
-            User targetUser = nextApplicationDate.getAnimalVaccine().getAnimal().getUser();
-            String message = formatMessage(nextApplicationDate);
+            User targetUser = animalVaccine.getAnimal().getUser();
+            String message = formatMessage(animalVaccine);
 
             Notification notification = Notification.builder()
                     .title("Lembrete de vacinação próxima")
@@ -55,22 +55,22 @@ public class SendVaccineApplicationReminderNotification {
             notificationService.sendSendVaccineApplicationReminder(notification);
             log.info("Notification sent to user: {}", targetUser.getId());
         } catch (Exception e) {
-            log.error("Failed to send notification for application date: {}", nextApplicationDate, e);
+            log.error("Failed to send notification for application date: {}", animalVaccine, e);
         }
     }
 
-    private String formatMessage(NextApplicationDate nextApplicationDate) {
+    private String formatMessage(AnimalVaccine animalVaccine) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        Animal animal = nextApplicationDate.getAnimalVaccine().getAnimal();
-        String vaccineName = nextApplicationDate.getAnimalVaccine().getVaccine().getName();
+        Animal animal = animalVaccine.getAnimal();
+        String vaccineName = animalVaccine.getVaccine().getName();
         String unitName = animal.getUnit().getName();
-        String nextApplicationDates = nextApplicationDate.getAnimalVaccine().getNextApplicationDates().stream()
+        String nextApplicationDates = animalVaccine.getNextApplicationDates().stream()
                 .map(NextApplicationDate::getApplicationDate)
                 .map(date -> date.format(formatter))
                 .collect(Collectors.joining(", "));
 
-        return String.format("O seu animal %s (%s) em %s está agendado para as seguintes vacinas: %s. Certifique-se de administrar a vacina: %s.",
+        return String.format("O seu animal %s (%s) em %s está agendado para as seguintes vacinas: %s. Certifique-se de administrar a vacina: %s.", // todo: internationalize
                 animal.getName(),
                 animal.getIdentification(),
                 unitName,
@@ -78,28 +78,3 @@ public class SendVaccineApplicationReminderNotification {
                 vaccineName);
     }
 }
-
-// nextApplicationDates.forEach(a -> {
-//         User targetUser = a.getAnimalVaccine().getAnimal().getUser();
-//
-//         String message = String.format("Vacinação próxima. Vacina: %s, animal: %s, unidade: %s, próximas aplicações: %s.",
-//         a.getAnimalVaccine().getVaccine().getName(),
-//         a.getAnimalVaccine().getAnimal().getName(),
-//         a.getAnimalVaccine().getAnimal().getUnit().getName(),
-//         a.getAnimalVaccine().getNextApplicationDates().stream()
-//         .map(NextApplicationDate::getApplicationDate)
-//         .map(b -> {
-//         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//         return b.format(formatter);
-//         })
-//         .collect(Collectors.joining(","))
-//         );
-//
-//         Notification notification = Notification.builder()
-//         .title("Lembrete de vacinação próxima")
-//         .message(message)
-//         .user(targetUser)
-//         .build();
-//
-//         notificationService.sendSendVaccineApplicationReminder(notification);
-//         });
