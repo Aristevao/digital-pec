@@ -1,5 +1,7 @@
 package com.fho.digitalpec.job;
 
+import static com.fho.digitalpec.utils.language.LanguageUtils.getMessage;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import com.fho.digitalpec.api.animalvaccine.service.AnimalVaccineService;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.service.NotificationService;
 import com.fho.digitalpec.api.user.entity.User;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,7 @@ public class SendVaccineApplicationReminderNotification {
 
     private final AnimalVaccineService animalVaccineService;
     private final NotificationService notificationService;
+    private final MessageSource messageSource;
 
     @Scheduled(cron = "0 0 3 * * ?", zone = "UTC")
     public void run() {
@@ -47,7 +51,7 @@ public class SendVaccineApplicationReminderNotification {
             String message = formatMessage(animalVaccine);
 
             Notification notification = Notification.builder()
-                    .title("Lembrete de vacinação próxima")
+                    .title(getMessage(messageSource, "notification.title"))
                     .message(message)
                     .user(targetUser)
                     .build();
@@ -70,7 +74,7 @@ public class SendVaccineApplicationReminderNotification {
                 .map(date -> date.format(formatter))
                 .collect(Collectors.joining(", "));
 
-        return String.format("O seu animal %s (%s) em %s está agendado para as seguintes vacinas: %s. Certifique-se de administrar a vacina: %s.", // todo: internationalize
+        return getMessage(messageSource, "notification.message",
                 animal.getName(),
                 animal.getIdentification(),
                 unitName,
