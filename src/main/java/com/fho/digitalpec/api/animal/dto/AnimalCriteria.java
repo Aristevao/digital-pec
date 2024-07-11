@@ -11,6 +11,7 @@ public class AnimalCriteria {
 
     private String name;
     private String identification;
+    private String specie;
     private String breed;
     private Sex sex;
     private LocalDate birthdate;
