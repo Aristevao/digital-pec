@@ -30,7 +30,7 @@ public class Animal extends AuditableEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 80)
+    @Column(length = 80)
     private String name;
 
     @Column(name = "identification", length = 50, unique = true)
@@ -46,10 +46,10 @@ public class Animal extends AuditableEntity<Long> {
     @Column(name = "sex", length = 6)
     private Sex sex;
 
-    @Column(name = "birthdate", nullable = false)
+    @Column(name = "birthdate")
     private LocalDate birthdate;
 
-    @Column(name = "registration_date", nullable = false)
+    @Column(name = "registration_date")
     private LocalDate registrationDate;
 
     @Column(name = "picture", length = 1024)
