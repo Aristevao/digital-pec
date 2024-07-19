@@ -16,4 +16,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
     List<Animal> findAllByUserIdOrderByNameAsc(Long userId);
 
     Optional<Animal> findByIdAndUserId(Long id, Long userId);
+
+    Integer countAnimalsByUnitId(Long unitId);
 }

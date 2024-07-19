@@ -46,6 +46,10 @@ public interface AnimalApi {
     @Operation(summary = "Get animal by ID", description = "Returns the details of an animal by its ID")
     AnimalDTO findById(@Parameter(description = "ID of the animal to be fetched") @PathVariable Long id);
 
+    @GetMapping("unit/{unitId}")
+    @Operation(summary = "Get animal count by unit ID", description = "Returns the animal count of an unit by its ID")
+    Integer countAnimalsByUnit(@PathVariable Long unitId);
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an animal", description = "Deletes an animal by its ID")

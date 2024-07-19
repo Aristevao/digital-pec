@@ -64,6 +64,12 @@ public class AnimalController implements AnimalApi {
     }
 
     @Override
+    public Integer countAnimalsByUnit(@PathVariable Long unitId) {
+        log.info("Getting animal's count for unit with id: {}.", unitId);
+        return service.countAnimalsByUnit(unitId);
+    }
+
+    @Override
     public void delete(@PathVariable Long id) {
         log.info("Deleting the animal with id: {}.", id);
         service.deleteById(id);

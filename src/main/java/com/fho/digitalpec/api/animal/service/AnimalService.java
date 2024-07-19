@@ -86,6 +86,10 @@ public class AnimalService {
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Animal.class, id));
     }
 
+    public Integer countAnimalsByUnit(Long unitId) {
+        return repository.countAnimalsByUnitId(unitId);
+    }
+
     public void deleteById(Long id) {
         findById(id);
         repository.deleteById(id);
