@@ -44,7 +44,7 @@ public interface UnitApi {
 
     @GetMapping("{id}")
     @Operation(summary = "Get unit by ID", description = "Returns the details of a unit by its ID")
-    UnitDTO findById(@Parameter(description = "ID of the unit to be fetched") @PathVariable Long id);
+    UnitResponseDTO findById(@Parameter(description = "ID of the unit to be fetched") @PathVariable Long id);
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

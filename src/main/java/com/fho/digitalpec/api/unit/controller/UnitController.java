@@ -56,10 +56,10 @@ public class UnitController implements UnitApi {
     }
 
     @Override
-    public UnitDTO findById(@PathVariable Long id) {
+    public UnitResponseDTO findById(@PathVariable Long id) {
         log.info("Getting unit with id: {}.", id);
         Unit unit = service.findById(id);
-        return mapper.toDto(unit);
+        return mapper.toResponseDto(unit);
     }
 
     @Override
