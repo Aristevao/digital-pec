@@ -3,6 +3,7 @@ package com.fho.digitalpec.api.unit.controller;
 import java.util.List;
 
 import com.fho.digitalpec.api.unit.dto.UnitDTO;
+import com.fho.digitalpec.api.unit.dto.UnitResponseDTO;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +36,7 @@ public interface UnitApi {
 
     @GetMapping
     @Operation(summary = "Find all units", description = "Returns a paginated list of all units")
-    Page<UnitDTO> findAll(Pageable pageable);
+    Page<UnitResponseDTO> findAll(Pageable pageable);
 
     @GetMapping("list")
     @Operation(summary = "List all active units", description = "Returns a list of all active units")

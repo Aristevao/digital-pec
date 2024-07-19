@@ -4,6 +4,7 @@ package com.fho.digitalpec.api.unit.controller;
 import java.util.List;
 
 import com.fho.digitalpec.api.unit.dto.UnitDTO;
+import com.fho.digitalpec.api.unit.dto.UnitResponseDTO;
 import com.fho.digitalpec.api.unit.entity.Unit;
 import com.fho.digitalpec.api.unit.mapper.UnitMapper;
 import com.fho.digitalpec.api.unit.service.UnitService;
@@ -41,9 +42,9 @@ public class UnitController implements UnitApi {
     }
 
     @Override
-    public Page<UnitDTO> findAll(Pageable pageable) {
+    public Page<UnitResponseDTO> findAll(Pageable pageable) {
         log.info("Finding all units.");
-        return service.findAll(pageable).map(mapper::toDto);
+        return service.findAll(pageable).map(mapper::toResponseDto);
     }
 
     @Override
