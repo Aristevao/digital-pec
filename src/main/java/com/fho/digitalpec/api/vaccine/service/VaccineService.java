@@ -15,7 +15,6 @@ import com.fho.digitalpec.api.vaccine.repository.VaccineSpecification;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
-import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +39,7 @@ public class VaccineService {
     public void create(Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, null);
 
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         entity.setUser(userService.findById(loggedUserId));
 
         Vaccine vaccine = repository.save(entity);

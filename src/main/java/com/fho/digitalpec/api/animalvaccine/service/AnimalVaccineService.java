@@ -30,6 +30,13 @@ public class AnimalVaccineService {
     private final AnimalVaccineRepository repository;
     private final NextApplicationDateService nextApplicationDateService;
 
+    /* TODO:
+        - Criar notificationCount: notificações não lidas
+            - front atualiza a cada x tempo
+        - Verificar se falta algum CRUD pra ajustar
+        - Vaccine não cria nova SPECIE. Cria somente a primeira. Talvez considerar refatorar pra ficar igual AnimalVaccine.
+     */
+
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
         if (entity.getApplicationDate() == null) {

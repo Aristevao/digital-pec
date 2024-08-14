@@ -12,7 +12,6 @@ import com.fho.digitalpec.exception.ResourceNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +25,14 @@ public class UserService {
 
     private final MessageSource messageSource;
     private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void create(User entity) {
         validateUniqueness(entity, null);
 
-        String hashedPassword = passwordEncoder.encode(entity.getPassword());
-        entity.setPassword(hashedPassword);
+//        String hashedPassword = passwordEncoder.encode(entity.getPassword());
+//        entity.setPassword(hashedPassword);
 
         User user = repository.save(entity);
 
