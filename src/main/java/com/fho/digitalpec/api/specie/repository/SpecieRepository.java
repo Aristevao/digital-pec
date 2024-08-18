@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpecieRepository extends JpaRepository<Specie, Long> {
-    Specie findByName(String name);
+    Specie findByNameIgnoreCase(String name);
 
     List<Specie> findAllByOrderByNameAsc();
 }
