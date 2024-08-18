@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
 import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
-import com.fho.digitalpec.api.vaccine.entity.Vaccine;
 import com.fho.digitalpec.api.vaccine.mapper.VaccineMapper;
 import com.fho.digitalpec.api.vaccine.service.VaccineService;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
@@ -64,8 +63,7 @@ public class VaccineController implements VaccineApi {
     @Override
     public VaccineDTO findById(@PathVariable Long id) {
         log.info("Getting vaccine with id: {}.", id);
-        Vaccine vaccine = service.findById(id);
-        return mapper.toDto(vaccine);
+        return service.findById(id);
     }
 
     @Override

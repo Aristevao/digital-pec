@@ -44,16 +44,18 @@ public class VaccineService {
 
         Vaccine vaccine = repository.save(entity);
 
-        vaccineSpecieService.create(entity, dto);
+        vaccineSpecieService.create(entity, dto); // TODO: BUGFIX - Associando SOMENTE UMA SPECIE. Devia cadastrar todos + filtro por specie nao funcionando
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
     }
 
     public void update(Long id, Vaccine entity) {
-        findById(id);
+        Vaccine existingEntity = findOne(id);
 
         validateNameUniqueness(entity, id);
 
-        entity.setId(id);
+        entity.setId(existingEntity.getId());
+        entity.setUser(existingEntity.getUser());
+
         repository.save(entity);
     }
 
@@ -74,19 +76,26 @@ public class VaccineService {
         return vaccines;
     }
 
-    public Vaccine findById(Long id) {
+    public Vaccine findOne(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Vaccine.class, id));
     }
 
+    public VaccineDTO findById(Long id) {
+        Vaccine entity = findOne(id);
+        List<VaccineSpecie> vaccineSpecies = vaccineSpecieService.findByVaccineId(id);
+
+        return mapper.toDto(entity, vaccineSpecies);
+    }
+
     public void deleteById(Long id) {
-        findById(id);
+        findOne(id);
         repository.deleteById(id);
         log.info("Vaccine '{}' was successfully deleted.", id);
     }
 
     public void updateName(Long id, String name) {
-        Vaccine vaccine = findById(id);
+        Vaccine vaccine = findOne(id);
         vaccine.setName(name);
         repository.save(vaccine);
         log.info("Vaccine '{}' was successfully updated.", id);

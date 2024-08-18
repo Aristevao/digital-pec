@@ -34,4 +34,8 @@ public class VaccineSpecieService {
     public List<VaccineSpecie> findByVaccineIdIn(List<Long> vaccineIds) {
         return repository.findByVaccineIdIn(vaccineIds);
     }
+
+    public List<VaccineSpecie> findByVaccineId(Long vaccineId) {
+        return repository.findByVaccineId(vaccineId);
+    }
 }

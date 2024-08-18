@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface VaccineSpecieRepository extends JpaRepository<VaccineSpecie, Long> {
 
     List<VaccineSpecie> findByVaccineIdIn(List<Long> vaccineIds);
+
+    List<VaccineSpecie> findByVaccineId(Long vaccineId);
 }
