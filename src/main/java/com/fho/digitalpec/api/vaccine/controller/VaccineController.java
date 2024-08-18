@@ -37,7 +37,7 @@ public class VaccineController implements VaccineApi {
     @Override
     public void update(@PathVariable Long id, @Valid @RequestBody VaccineDTO dto) {
         log.info("Updating vaccine {}. Payload: {}.", id, dto);
-        service.update(id, mapper.toEntity(dto));
+        service.update(id, mapper.toEntity(dto), dto);
     }
 
     @Override

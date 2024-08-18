@@ -12,4 +12,6 @@ public interface VaccineSpecieRepository extends JpaRepository<VaccineSpecie, Lo
     List<VaccineSpecie> findByVaccineIdIn(List<Long> vaccineIds);
 
     List<VaccineSpecie> findByVaccineId(Long vaccineId);
+
+    void deleteByIdIn(List<Long> ids);
 }

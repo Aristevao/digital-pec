@@ -44,17 +44,19 @@ public class VaccineService {
 
         Vaccine vaccine = repository.save(entity);
 
-        vaccineSpecieService.create(entity, dto); // TODO: BUGFIX - Associando SOMENTE UMA SPECIE. Devia cadastrar todos + filtro por specie nao funcionando
+        vaccineSpecieService.create(entity, dto);
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
     }
 
-    public void update(Long id, Vaccine entity) {
-        Vaccine existingEntity = findOne(id);
-
+    public void update(Long id, Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, id);
 
-        entity.setId(existingEntity.getId());
+        entity.setId(id);
+
+        Vaccine existingEntity = findOne(id);
         entity.setUser(existingEntity.getUser());
+
+        vaccineSpecieService.update(entity, dto);
 
         repository.save(entity);
     }
@@ -88,8 +90,12 @@ public class VaccineService {
         return mapper.toDto(entity, vaccineSpecies);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         findOne(id);
+
+        vaccineSpecieService.deleteByVaccineId(id);
+
         repository.deleteById(id);
         log.info("Vaccine '{}' was successfully deleted.", id);
     }
