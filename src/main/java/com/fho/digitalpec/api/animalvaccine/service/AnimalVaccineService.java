@@ -5,12 +5,14 @@ import static java.lang.Boolean.FALSE;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fho.digitalpec.api.animal.service.AnimalService;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineCriteria;
 import com.fho.digitalpec.api.animalvaccine.dto.AnimalVaccineDTO;
 import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
 import com.fho.digitalpec.api.animalvaccine.entity.NextApplicationDate;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineRepository;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineSpecification;
+import com.fho.digitalpec.api.vaccine.service.VaccineService;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,8 @@ public class AnimalVaccineService {
     private final MessageSource messageSource;
     private final AnimalVaccineRepository repository;
     private final NextApplicationDateService nextApplicationDateService;
+    private final AnimalService animalService;
+    private final VaccineService vaccineService;
 
     /* TODO:
         - Criar notificationCount: notificações não lidas
@@ -39,6 +43,9 @@ public class AnimalVaccineService {
 
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
+        animalService.findById(entity.getAnimal().getId());
+        vaccineService.findById(entity.getVaccine().getId());
+
         if (entity.getApplicationDate() == null) {
             entity.setApplicationDate(LocalDate.now());
         }
