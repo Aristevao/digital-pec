@@ -15,7 +15,6 @@ import com.fho.digitalpec.api.vaccine.repository.VaccineSpecification;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
-import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +39,7 @@ public class VaccineService {
     public void create(Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, null);
 
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         entity.setUser(userService.findById(loggedUserId));
 
         Vaccine vaccine = repository.save(entity);
@@ -49,12 +48,16 @@ public class VaccineService {
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
     }
 
-    public void update(Long id, Vaccine entity) {
-        findById(id);
-
+    public void update(Long id, Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, id);
 
         entity.setId(id);
+
+        Vaccine existingEntity = findOne(id);
+        entity.setUser(existingEntity.getUser());
+
+        vaccineSpecieService.update(entity, dto);
+
         repository.save(entity);
     }
 
@@ -75,19 +78,30 @@ public class VaccineService {
         return vaccines;
     }
 
-    public Vaccine findById(Long id) {
+    public Vaccine findOne(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Vaccine.class, id));
     }
 
+    public VaccineDTO findById(Long id) {
+        Vaccine entity = findOne(id);
+        List<VaccineSpecie> vaccineSpecies = vaccineSpecieService.findByVaccineId(id);
+
+        return mapper.toDto(entity, vaccineSpecies);
+    }
+
+    @Transactional
     public void deleteById(Long id) {
-        findById(id);
+        findOne(id);
+
+        vaccineSpecieService.deleteByVaccineId(id);
+
         repository.deleteById(id);
         log.info("Vaccine '{}' was successfully deleted.", id);
     }
 
     public void updateName(Long id, String name) {
-        Vaccine vaccine = findById(id);
+        Vaccine vaccine = findOne(id);
         vaccine.setName(name);
         repository.save(vaccine);
         log.info("Vaccine '{}' was successfully updated.", id);

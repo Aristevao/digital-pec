@@ -4,7 +4,6 @@ import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.unit.entity.Unit;
 import com.fho.digitalpec.api.user.entity.User;
-import com.fho.digitalpec.security.authentication.LoggedUser;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
@@ -23,7 +22,7 @@ public class AnimalSpecification implements Specification<Animal> {
     public Predicate toPredicate(Root<Animal> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Predicate predicate = criteriaBuilder.conjunction();
 
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         Join<Animal, User> userJoin = root.join("user");
         predicate = criteriaBuilder.and(predicate,
                 criteriaBuilder.equal(userJoin.get("id"), loggedUserId));

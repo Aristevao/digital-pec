@@ -10,7 +10,6 @@ import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
-import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +32,7 @@ public class UnitService {
     public void create(Unit entity) {
         validateNameUniqueness(entity, null);
 
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         entity.setUser(userService.findById(loggedUserId));
 
         repository.save(entity);

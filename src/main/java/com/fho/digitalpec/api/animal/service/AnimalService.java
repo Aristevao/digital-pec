@@ -14,7 +14,6 @@ import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ConflictException;
 import com.fho.digitalpec.exception.ErrorCode;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
-import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +40,7 @@ public class AnimalService {
 
         unitService.findById(entity.getUnit().getId());
 
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         entity.setUser(userService.findById(loggedUserId));
 
         specieService.create(entity);
@@ -74,14 +73,14 @@ public class AnimalService {
     }
 
     public List<Animal> listAll() {
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         List<Animal> animals = repository.findAllByUserIdOrderByNameAsc(loggedUserId);
         log.info("Fetched {} Animals.", animals.size());
         return animals;
     }
 
     public Animal findById(Long id) {
-        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Long loggedUserId = 1L;
         return repository.findByIdAndUserId(id, loggedUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Animal.class, id));
     }
