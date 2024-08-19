@@ -43,8 +43,8 @@ public class AnimalVaccineService {
 
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
-        animalService.findById(entity.getAnimal().getId());
-        vaccineService.findById(entity.getVaccine().getId());
+        entity.setAnimal(animalService.findById(entity.getAnimal().getId()));
+        entity.setVaccine(vaccineService.findOne(entity.getVaccine().getId()));
 
         if (entity.getApplicationDate() == null) {
             entity.setApplicationDate(LocalDate.now());
