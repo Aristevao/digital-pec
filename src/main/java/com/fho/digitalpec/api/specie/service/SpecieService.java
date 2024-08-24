@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.specie.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.specie.entity.Specie;
@@ -20,7 +21,7 @@ public class SpecieService {
     private final SpecieRepository repository;
 
     public void create(Animal entity) {
-        Specie existingSpecie = repository.findByName(entity.getSpecie());
+        Specie existingSpecie = repository.findByNameIgnoreCase(entity.getSpecie());
 
         if (existingSpecie == null) {
             Specie specie = Specie.builder()
@@ -35,18 +36,12 @@ public class SpecieService {
 
     public List<Specie> create(Vaccine entity, VaccineDTO dto) {
         return dto.getSpecies().stream()
-                .distinct()
                 .map(specie -> {
-                    Specie existingSpecie = repository.findByName(specie.getName());
-                    if (existingSpecie != null) {
-                        return existingSpecie;
-                    } else {
-                        Specie newSpecie = Specie.builder()
-                                .name(specie.getName())
-                                .user(entity.getUser())
-                                .build();
-                        return repository.save(newSpecie);
-                    }
+                    Specie existingSpecie = repository.findByNameIgnoreCase(specie.getName().trim());
+                    return Objects.requireNonNullElseGet(existingSpecie, () -> repository.save(Specie.builder()
+                            .name(specie.getName())
+                            .user(entity.getUser())
+                            .build()));
                 })
                 .toList();
     }

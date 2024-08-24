@@ -49,12 +49,16 @@ public class VaccineService {
         log.info("Vaccine '{}' was successfully created.", vaccine.getId());
     }
 
-    public void update(Long id, Vaccine entity) {
-        findById(id);
-
+    public void update(Long id, Vaccine entity, VaccineDTO dto) {
         validateNameUniqueness(entity, id);
 
         entity.setId(id);
+
+        Vaccine existingEntity = findOne(id);
+        entity.setUser(existingEntity.getUser());
+
+        vaccineSpecieService.update(entity, dto);
+
         repository.save(entity);
     }
 
@@ -75,19 +79,30 @@ public class VaccineService {
         return vaccines;
     }
 
-    public Vaccine findById(Long id) {
+    public Vaccine findOne(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Vaccine.class, id));
     }
 
+    public VaccineDTO findById(Long id) {
+        Vaccine entity = findOne(id);
+        List<VaccineSpecie> vaccineSpecies = vaccineSpecieService.findByVaccineId(id);
+
+        return mapper.toDto(entity, vaccineSpecies);
+    }
+
+    @Transactional
     public void deleteById(Long id) {
-        findById(id);
+        findOne(id);
+
+        vaccineSpecieService.deleteByVaccineId(id);
+
         repository.deleteById(id);
         log.info("Vaccine '{}' was successfully deleted.", id);
     }
 
     public void updateName(Long id, String name) {
-        Vaccine vaccine = findById(id);
+        Vaccine vaccine = findOne(id);
         vaccine.setName(name);
         repository.save(vaccine);
         log.info("Vaccine '{}' was successfully updated.", id);

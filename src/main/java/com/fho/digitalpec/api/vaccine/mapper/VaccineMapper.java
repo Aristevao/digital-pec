@@ -24,16 +24,46 @@ public interface VaccineMapper extends DataMapper<Vaccine, VaccineDTO> {
     @Mapping(target = "description", ignore = true)
     SimpleDTO toSimpleDto(Vaccine entity);
 
+    default VaccineDTO toDto(Vaccine entity, List<VaccineSpecie> vaccineSpecies) {
+        VaccineDTO dto = toDto(entity);
+        Map<Long, List<Specie>> speciesMap = mapVaccineSpecies(vaccineSpecies);
+
+        List<Specie> species = speciesMap.getOrDefault(dto.getId(), Collections.emptyList());
+
+        if (dto.getSpecies() == null) {
+            dto.setSpecies(new ArrayList<>());
+        }
+
+        dto.getSpecies().addAll(species);
+
+        return dto;
+    }
+
+
     default Page<VaccineDTO> toDto(Page<Vaccine> entities, List<VaccineSpecie> vaccineSpecies) {
         Page<VaccineDTO> dtos = toDto(entities);
+        Map<Long, List<Specie>> speciesMap = mapVaccineSpecies(vaccineSpecies);
+        addSpeciesToDtos(dtos, speciesMap);
+        return dtos;
+    }
 
-        Map<Long, List<Specie>> speciesMap = vaccineSpecies.stream()
+    default List<VaccineDTO> toDto(List<Vaccine> entities, List<VaccineSpecie> vaccineSpecies) {
+        List<VaccineDTO> dtos = toDto(entities);
+        Map<Long, List<Specie>> speciesMap = mapVaccineSpecies(vaccineSpecies);
+        addSpeciesToDtos(dtos, speciesMap);
+        return dtos;
+    }
+
+    private Map<Long, List<Specie>> mapVaccineSpecies(List<VaccineSpecie> vaccineSpecies) {
+        return vaccineSpecies.stream()
                 .peek(vs -> vs.getSpecie().setUser(null))
                 .collect(Collectors.groupingBy(
                         vs -> vs.getVaccine().getId(),
                         Collectors.mapping(VaccineSpecie::getSpecie, Collectors.toList())
                 ));
+    }
 
+    private void addSpeciesToDtos(Iterable<VaccineDTO> dtos, Map<Long, List<Specie>> speciesMap) {
         dtos.forEach(dto -> {
             List<Specie> species = speciesMap.getOrDefault(dto.getId(), Collections.emptyList());
             if (dto.getSpecies() == null) {
@@ -41,7 +71,5 @@ public interface VaccineMapper extends DataMapper<Vaccine, VaccineDTO> {
             }
             dto.getSpecies().addAll(species);
         });
-
-        return dtos;
     }
 }
