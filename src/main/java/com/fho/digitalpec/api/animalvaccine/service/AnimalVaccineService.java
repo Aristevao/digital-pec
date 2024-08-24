@@ -86,4 +86,8 @@ public class AnimalVaccineService {
         LocalDate fourDaysFromNow = now.plusDays(4);
         return repository.findNextVaccinationDatesIn4DaysInterval(fourDaysFromNow);
     }
+
+    public List<AnimalVaccine> findByVaccineId(Long vaccineId) {
+        return repository.findByVaccineId(vaccineId);
+    }
 }

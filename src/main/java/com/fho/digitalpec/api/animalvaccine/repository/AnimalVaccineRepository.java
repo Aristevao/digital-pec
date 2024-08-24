@@ -19,4 +19,6 @@ public interface AnimalVaccineRepository extends JpaRepository<AnimalVaccine, Lo
             "WHERE nad.applicationDate <= :fourDaysFromNow AND " +
             "av.completed = false")
     List<AnimalVaccine> findNextVaccinationDatesIn4DaysInterval(LocalDate fourDaysFromNow);
+
+    List<AnimalVaccine> findByVaccineId(Long vaccineId);
 }

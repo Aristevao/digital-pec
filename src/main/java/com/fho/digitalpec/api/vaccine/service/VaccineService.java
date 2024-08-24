@@ -4,6 +4,8 @@ import static java.lang.String.format;
 
 import java.util.List;
 
+import com.fho.digitalpec.api.animalvaccine.entity.AnimalVaccine;
+import com.fho.digitalpec.api.animalvaccine.service.AnimalVaccineService;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.api.vaccine.dto.VaccineCriteria;
 import com.fho.digitalpec.api.vaccine.dto.VaccineDTO;
@@ -34,6 +36,7 @@ public class VaccineService {
     private final MessageSource messageSource;
     private final UserService userService;
     private final VaccineSpecieService vaccineSpecieService;
+    private final AnimalVaccineService animalVaccineService;
     private final VaccineMapper mapper;
 
     @Transactional
@@ -96,6 +99,12 @@ public class VaccineService {
         findOne(id);
 
         vaccineSpecieService.deleteByVaccineId(id);
+
+        List<AnimalVaccine> animalVaccines = animalVaccineService.findByVaccineId(id);
+        if (!animalVaccines.isEmpty()) {
+            throw new ConflictException(ErrorCode.DUPLICATED_UNIT_NAME,
+                    "Can not delete because there is an animalVaccine associated with this vaccine.");
+        }
 
         repository.deleteById(id);
         log.info("Vaccine '{}' was successfully deleted.", id);
