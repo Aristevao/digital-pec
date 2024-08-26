@@ -61,6 +61,7 @@ public class JwtTokenUtil implements Serializable {
         if (userDetails instanceof CustomUserDetails customUserDetails) {
             claims.put("id", customUserDetails.getId());
             claims.put("email", customUserDetails.getEmail());
+            claims.put("name", customUserDetails.getName());
         }
         return doGenerateToken(claims, userDetails.getUsername());
     }

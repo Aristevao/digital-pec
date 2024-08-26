@@ -22,6 +22,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getEmail(), user.getPassword(), new ArrayList<>());
+        return new CustomUserDetails(user.getId(), user.getName(), user.getEmail(), user.getEmail(), user.getPassword(), new ArrayList<>());
     }
 }
