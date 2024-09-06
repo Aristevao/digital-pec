@@ -30,13 +30,13 @@ public class User extends AuditableEntity<Long> {
     @Column(name = "email", nullable = false, length = 320, unique = true)
     private String email;
 
-    @Column(name = "phone", length = 9)
+    @Column(name = "phone", length = 11)
     private String phone;
 
     @Column
     private LocalDate birthdate;
 
-    @Column(name = "picture")
+    @Column(name = "picture", columnDefinition = "TEXT")
     private String picture;
 
     @Column(name = "password")
