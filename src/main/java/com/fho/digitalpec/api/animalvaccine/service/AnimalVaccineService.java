@@ -55,7 +55,7 @@ public class AnimalVaccineService {
 
         AnimalVaccine animalVaccine = repository.save(entity);
 
-        nextApplicationDateService.create(animalVaccine, dto);
+        nextApplicationDateService.update(animalVaccine, dto.getNextApplicationDates());
     }
 
     public Page<AnimalVaccine> findAll(AnimalVaccineCriteria criteria, Pageable pageable) {

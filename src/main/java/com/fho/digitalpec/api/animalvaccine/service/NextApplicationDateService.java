@@ -50,10 +50,21 @@ public class NextApplicationDateService {
         repository.saveAll(nextApplicationDates);
     }
 
-    public void update(AnimalVaccine entity, List<LocalDate> newNextApplicationDate) {
-        List<LocalDate> existingNextApplicationDates = findNextApplicationDatesByAnimalVaccine(entity);
-        deleteRemovedApplicationDates(entity.getId(), newNextApplicationDate, existingNextApplicationDates);
-        addNewApplicationDates(entity, newNextApplicationDate, existingNextApplicationDates);
+    @Transactional
+    public void update(AnimalVaccine entity, List<LocalDate> nextApplicationDatesDto) {
+        repository.deleteAllByAnimalVaccineId(entity.getId());
+
+        List<NextApplicationDate> newNextApplicationDates = nextApplicationDatesDto.stream()
+                .map(date -> NextApplicationDate.builder()
+                        .applicationDate(date)
+                        .animalVaccine(entity)
+                        .build())
+                .toList();
+
+        List<NextApplicationDate> nextApplicationDates = repository.saveAll(newNextApplicationDates);
+
+        entity.setNextApplicationDates(nextApplicationDates);
+        animalVaccineService.save(entity);
     }
 
     public List<LocalDate> findNextApplicationDatesByAnimalVaccine(AnimalVaccine entity) {

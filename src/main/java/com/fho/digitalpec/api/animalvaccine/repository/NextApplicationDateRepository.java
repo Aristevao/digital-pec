@@ -14,4 +14,6 @@ public interface NextApplicationDateRepository extends JpaRepository<NextApplica
     List<NextApplicationDate> findByAnimalVaccine(AnimalVaccine entity);
 
     void deleteByAnimalVaccineIdAndApplicationDateIn(Long entityId, List<LocalDate> localDatesToRemove);
+
+    void deleteAllByAnimalVaccineId(Long entityId);
 }
