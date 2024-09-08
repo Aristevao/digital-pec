@@ -52,7 +52,7 @@ public class Animal extends AuditableEntity<Long> {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    @Column(name = "picture", length = 1024)
+    @Column(name = "picture", columnDefinition = "TEXT")
     private String picture;
 
     @Column(name = "description", length = 1000)

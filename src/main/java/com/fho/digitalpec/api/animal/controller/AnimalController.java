@@ -32,13 +32,13 @@ public class AnimalController implements AnimalApi {
 
     @Override
     public void create(@Valid @ModelAttribute AnimalDTO dto) {
-        log.info("Creating animal. Payload: {}.", dto);
+        log.info("Creating animal. Identification '{}'; name: {}.", dto.getIdentification(), dto.getName());
         service.create(mapper.toEntity(dto));
     }
 
     @Override
     public void update(@PathVariable Long id, @Valid @ModelAttribute AnimalDTO dto) {
-        log.info("Updating animal {}. Payload: {}.", id, dto);
+        log.info("Updating animal {}. Identification '{}'; name: {}.", id, dto.getIdentification(), dto.getName());
         service.update(id, mapper.toEntity(dto));
     }
 

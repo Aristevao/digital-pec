@@ -31,13 +31,13 @@ public class UnitController implements UnitApi {
 
     @Override
     public void create(@Valid @ModelAttribute UnitDTO dto) {
-        log.info("Creating unit. Payload: {}.", dto);
+        log.info("Creating unit. Payload: {}.", dto.getName());
         service.create(mapper.toEntity(dto));
     }
 
     @Override
     public void update(@PathVariable Long id, @Valid @ModelAttribute UnitDTO dto) {
-        log.info("Updating unit {}. Payload: {}.", id, dto);
+        log.info("Updating unit {}. Payload: {}.", id, dto.getName());
         service.update(id, mapper.toEntity(dto));
     }
 

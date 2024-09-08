@@ -3,7 +3,6 @@ package com.fho.digitalpec.api.unit.dto;
 import com.fho.digitalpec.api.address.entity.Address;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -21,5 +20,5 @@ public class UnitDTO {
 
     private Address address;
 
-    private MultipartFile picture;
+    private String picture;
 }

@@ -7,7 +7,6 @@ import com.fho.digitalpec.api.unit.entity.Unit;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -42,5 +41,5 @@ public class AnimalDTO {
     @NotNull
     private Unit unit;
 
-    private MultipartFile picture;
+    private String picture;
 }

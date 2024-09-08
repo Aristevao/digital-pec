@@ -31,7 +31,7 @@ public class Unit extends AuditableEntity<Long> {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(name = "picture", length = 1024)
+    @Column(name = "picture", columnDefinition = "TEXT")
     private String picture;
 
     @Column(length = 500)
