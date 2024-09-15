@@ -8,6 +8,7 @@ import com.fho.digitalpec.api.notification.service.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,12 @@ public class NotificationController implements NotificationApi {
 
     private final NotificationService service;
     private final NotificationMapper mapper;
+
+    @Override
+    public void create(@RequestBody NotificationDTO dto) {
+        log.info("Creating notification. Payload: {}.", dto);
+        service.create(mapper.toEntity(dto));
+    }
 
     @Override
     public Page<NotificationDTO> findAll(@RequestParam(required = false) Boolean isRead, Pageable pageable) {

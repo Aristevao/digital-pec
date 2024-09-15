@@ -8,6 +8,7 @@ import java.util.List;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.repository.NotificationRepository;
 import com.fho.digitalpec.api.notification.repository.NotificationSpecification;
+import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
 import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
@@ -26,6 +27,18 @@ public class NotificationService {
 
     private final MessageSource messageSource;
     private final NotificationRepository repository;
+    private final UserService userService;
+
+    public void create(Notification entity) {
+        if (entity.getUser() == null) {
+            Long loggedUserId = LoggedUser.getLoggedInUserId();
+            entity.setUser(userService.findById(loggedUserId));
+        }
+
+        entity.setIsRead(FALSE);
+
+        repository.save(entity);
+    }
 
     public void sendSendVaccineApplicationReminder(Notification entity) {
         entity.setIsRead(FALSE);
