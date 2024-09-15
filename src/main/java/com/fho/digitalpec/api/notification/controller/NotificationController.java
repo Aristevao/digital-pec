@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class NotificationController implements NotificationApi {
     private final NotificationMapper mapper;
 
     @Override
-    public Page<NotificationDTO> findAll(Pageable pageable) {
+    public Page<NotificationDTO> findAll(@RequestParam(required = false) Boolean isRead, Pageable pageable) {
         log.info("Finding all notifications.");
-        return service.findAll(pageable).map(mapper::toDto);
+        return service.findAll(isRead, pageable).map(mapper::toDto);
     }
 
     @Override

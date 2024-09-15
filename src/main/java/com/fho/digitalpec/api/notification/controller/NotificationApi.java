@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Tag(name = "Notification API", description = "API for managing notifications")
@@ -17,7 +18,7 @@ public interface NotificationApi {
 
     @GetMapping
     @Operation(summary = "Find all notifications", description = "Returns a paginated list of all notifications")
-    Page<NotificationDTO> findAll(Pageable pageable);
+    Page<NotificationDTO> findAll(@RequestParam(required = false) Boolean isRead, Pageable pageable);
 
     @GetMapping("{id}")
     @Operation(summary = "Find a notification by ID", description = "Returns the details of a notification by its ID")
