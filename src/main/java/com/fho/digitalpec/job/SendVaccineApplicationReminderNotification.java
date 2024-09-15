@@ -36,13 +36,15 @@ public class SendVaccineApplicationReminderNotification {
         try {
             List<AnimalVaccine> animalVaccines = animalVaccineService.findNextApplicationDates();
 
+            animalVaccines.forEach(av -> log.info("Sending vaccine application reminder notifications to AnimalVaccine: ID: {}; Next application dates: {}.",
+                    av.getId(), av.getNextApplicationDates().stream().map(NextApplicationDate::getApplicationDate).toList()));
+
             animalVaccines.forEach(this::sendReminderNotification);
 
+            log.info("[Task end] Sending vaccine application reminder notifications. Sent to '{}' animalVaccines", animalVaccines.size());
         } catch (Exception e) {
             log.error("Error occurred while sending vaccine application reminder notifications.", e);
         }
-
-        log.info("[Task end] Sending vaccine application reminder notifications.");
     }
 
     private void sendReminderNotification(AnimalVaccine animalVaccine) {

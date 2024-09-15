@@ -5,6 +5,7 @@ import com.fho.digitalpec.api.notification.dto.NotificationDTO;
 import com.fho.digitalpec.api.notification.entity.Notification;
 import com.fho.digitalpec.api.notification.mapper.NotificationMapper;
 import com.fho.digitalpec.api.notification.service.NotificationService;
+import com.fho.digitalpec.job.SendVaccineApplicationReminderNotification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ public class NotificationController implements NotificationApi {
 
     private final NotificationService service;
     private final NotificationMapper mapper;
+    private final SendVaccineApplicationReminderNotification job;
 
     @Override
     public void create(@RequestBody NotificationDTO dto) {
@@ -54,5 +56,11 @@ public class NotificationController implements NotificationApi {
     public void markAllAsRead() {
         log.info("Marking all notifications as read.");
         service.markAllAsRead();
+    }
+
+    @Override
+    public void sendReminderNotification() {
+        log.info("Manually started job to send vaccine application reminder notifications.");
+        job.run();
     }
 }

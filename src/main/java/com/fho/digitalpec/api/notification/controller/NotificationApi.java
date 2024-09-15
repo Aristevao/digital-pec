@@ -41,4 +41,9 @@ public interface NotificationApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Mark all notifications as read", description = "Marks all notifications as read for the current user")
     void markAllAsRead();
+
+    @PostMapping("job")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @Operation(summary = "Manually run job", description = "Runs job to send vaccine application reminder notifications.")
+    void sendReminderNotification();
 }
