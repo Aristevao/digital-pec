@@ -29,12 +29,12 @@ public class NextApplicationDateService {
     public List<NextApplicationDate> create(AnimalVaccine entity, AnimalVaccineDTO dto) {
         List<LocalDate> nextApplicationLocalDates = dto.getNextApplicationDates();
         if (!nextApplicationLocalDates.isEmpty()) {
-            return nextApplicationLocalDates.stream()
+            return repository.saveAll(nextApplicationLocalDates.stream()
                     .map(localDate -> NextApplicationDate.builder()
                             .animalVaccine(entity)
                             .applicationDate(localDate)
                             .build())
-                    .toList();
+                    .toList());
         }
         return Collections.emptyList();
     }

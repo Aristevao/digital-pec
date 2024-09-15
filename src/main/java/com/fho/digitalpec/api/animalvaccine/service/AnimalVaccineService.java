@@ -40,10 +40,12 @@ public class AnimalVaccineService {
             entity.setCompleted(FALSE);
         }
 
-        List<NextApplicationDate> nextApplicationDates = nextApplicationDateService.create(entity, dto);
-        entity.setNextApplicationDates(nextApplicationDates);
+        AnimalVaccine animalVaccine = repository.save(entity);
 
-        repository.save(entity);
+        List<NextApplicationDate> nextApplicationDates = nextApplicationDateService.create(animalVaccine, dto);
+        animalVaccine.setNextApplicationDates(nextApplicationDates);
+
+        repository.save(animalVaccine);
     }
 
     public void update(Long id, AnimalVaccineDTO dto) {
