@@ -61,7 +61,7 @@ public class UnitService {
     }
 
     public Page<Unit> findAll(Pageable pageable) {
-        Page<Unit> units = repository.findAll(pageable);
+        Page<Unit> units = repository.findAllByUserId(LoggedUser.getLoggedInUserId(), pageable);
         log.info("Fetched {} Units.", units.getContent().size());
         return units;
     }

@@ -23,6 +23,10 @@ public class VaccineSpecification implements Specification<Vaccine> {
             predicate = criteriaBuilder.and(predicate,
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + criteria.getName().toLowerCase() + "%"));
         }
+        if (criteria.getUserId() != null) {
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.equal(root.get("user").get("id"), criteria.getUserId()));
+        }
         if (criteria.getDescription() != null && !criteria.getDescription().isEmpty()) {
             predicate = criteriaBuilder.and(predicate,
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + criteria.getDescription().toLowerCase() + "%"));

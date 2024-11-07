@@ -17,4 +17,5 @@ public class AnimalVaccineCriteria {
     private Boolean completed;
     private LocalDate applicationDate;
     private List<NextApplicationDate> nextApplicationDates;
+    private Long userId;
 }

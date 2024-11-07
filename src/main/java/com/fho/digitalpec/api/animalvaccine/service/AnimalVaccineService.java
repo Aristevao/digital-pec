@@ -12,6 +12,7 @@ import com.fho.digitalpec.api.animalvaccine.entity.NextApplicationDate;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineRepository;
 import com.fho.digitalpec.api.animalvaccine.repository.AnimalVaccineSpecification;
 import com.fho.digitalpec.exception.ResourceNotFoundException;
+import com.fho.digitalpec.security.authentication.LoggedUser;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +62,7 @@ public class AnimalVaccineService {
     }
 
     public Page<AnimalVaccine> findAll(AnimalVaccineCriteria criteria, Pageable pageable) {
+        criteria.setUserId(LoggedUser.getLoggedInUserId());
         AnimalVaccineSpecification specification = new AnimalVaccineSpecification(criteria);
         Page<AnimalVaccine> animalVaccineLists = repository.findAll(specification, pageable);
 

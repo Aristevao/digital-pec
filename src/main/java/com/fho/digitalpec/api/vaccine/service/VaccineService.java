@@ -66,6 +66,7 @@ public class VaccineService {
     }
 
     public Page<VaccineDTO> findAll(VaccineCriteria criteria, Pageable pageable) {
+        criteria.setUserId(LoggedUser.getLoggedInUserId());
         VaccineSpecification specification = new VaccineSpecification(criteria);
         Page<Vaccine> vaccines = repository.findAll(specification, pageable);
 

@@ -27,6 +27,10 @@ public class AnimalVaccineSpecification implements Specification<AnimalVaccine> 
             predicate = criteriaBuilder.and(predicate,
                     criteriaBuilder.equal(root.get("animal"), criteria.getAnimal()));
         }
+        if (criteria.getUserId() != null) {
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.equal(root.get("animal").get("user").get("id"), criteria.getUserId()));
+        }
         if (criteria.getVaccine() != null) {
             predicate = criteriaBuilder.and(predicate,
                     criteriaBuilder.equal(root.get("vaccine"), criteria.getVaccine()));
