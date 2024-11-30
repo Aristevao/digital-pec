@@ -1,12 +1,14 @@
 package com.fho.digitalpec.api.animal.service;
 
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
-import com.fho.digitalpec.api.animal.dto.AnimalStatus;
+import com.fho.digitalpec.api.animal.dto.AnimalControlDTO;
 import com.fho.digitalpec.api.animal.entity.AnimalControl;
+import com.fho.digitalpec.api.animal.mapper.AnimalControlMapper;
 import com.fho.digitalpec.api.animal.repository.AnimalControlRepository;
 import com.fho.digitalpec.api.user.service.UserService;
 import com.fho.digitalpec.security.authentication.LoggedUser;
+import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,23 @@ public class AnimalControlService {
 
     private final AnimalControlRepository repository;
     private final UserService userService;
+    private final AnimalService animalService;
+    private final AnimalControlMapper mapper;
+
+    public AnimalControl createAnimalControl(AnimalControlDTO dto) {
+        AnimalControl animalControl = mapper.toEntity(dto);
+
+        Long loggedUserId = LoggedUser.getLoggedInUserId();
+        Optional<AnimalControl> animalControlOpt = repository.findByUserId(loggedUserId);
+
+        if (animalControlOpt.isPresent()) {
+            animalControl.setId(animalControlOpt.get().getId());
+        }
+
+        animalControl.setUser(userService.findById(loggedUserId));
+
+        return repository.save(animalControl);
+    }
 
     public String animalExited() {
         AnimalControl animalControl = getAnimalControl();
@@ -47,20 +66,13 @@ public class AnimalControlService {
         }
     }
 
-    public AnimalStatus getStatus() {
-        AnimalControl animalControl = getAnimalControl();
-
-        int difference = animalControl.getTotalExiting() - animalControl.getTotalReturning();
-
-        return new AnimalStatus(animalControl.getTotalExiting(), animalControl.getTotalReturning(), difference);
-    }
-
-    private AnimalControl getAnimalControl() {
+    public AnimalControl getAnimalControl() {
         Long loggedUserId = LoggedUser.getLoggedInUserId();
 
         return repository.findByUserId(loggedUserId)
                 .orElse(AnimalControl.builder()
                         .user(userService.findById(loggedUserId))
+                        .animalsQuantity(animalService.countAll())
                         .build());
     }
 }

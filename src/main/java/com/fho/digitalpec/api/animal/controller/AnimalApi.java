@@ -3,9 +3,9 @@ package com.fho.digitalpec.api.animal.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.fho.digitalpec.api.animal.dto.AnimalControlDTO;
 import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.dto.AnimalDTO;
-import com.fho.digitalpec.api.animal.dto.AnimalStatus;
 import com.fho.digitalpec.utils.mapper.SimpleDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,16 +64,20 @@ public interface AnimalApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an animal", description = "Deletes an animal by its ID")
     void delete(@Parameter(description = "ID of the animal to be deleted") @PathVariable Long id);
-    
+
+    @PostMapping("control")
+    @Operation(summary = "Set total animals quantity", description = "Set total animals quantity")
+    public AnimalControlDTO createAnimalControl(@RequestBody AnimalControlDTO dto);
+
     @PostMapping("exit")
     @Operation(summary = "Animal left", description = "Endpoint to simulate animal departure")
     public String animalLeft();
-    
+
     @PostMapping("return")
     @Operation(summary = "Animal returned", description = "Endpoint to simulate animal return")
     public String animalReturned();
-    
+
     @GetMapping("status")
     @Operation(summary = "Animal current status", description = "Endpoint to get current status")
-    public AnimalStatus getStatus();
+    public AnimalControlDTO getStatus();
 }
