@@ -1,5 +1,5 @@
 jwt:
-  secret: ${JWT_SECRET}
+  secret: 019004a1-7b4b-765a-9f0a-ebc987159fe
 
 spring:
   application:
@@ -16,9 +16,9 @@ spring:
         time_zone: UTC
   datasource:
     driverClassName: org.postgresql.Driver
-    url: "jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}"
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: "jdbc:postgresql://localhost:5432/digital-pec-local"
+    username: postgres
+    password: postgres
     hikari:
       minimumIdle: 1
       maximum-pool-size: 5

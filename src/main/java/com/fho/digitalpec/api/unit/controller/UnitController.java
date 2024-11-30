@@ -56,6 +56,12 @@ public class UnitController implements UnitApi {
     }
 
     @Override
+    public Integer countAll() {
+        log.info("Getting unit's count");
+        return service.countAll();
+    }
+
+    @Override
     public UnitResponseDTO findById(@PathVariable Long id) {
         log.info("Getting unit with id: {}.", id);
         Unit unit = service.findById(id);

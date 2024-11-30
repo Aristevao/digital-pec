@@ -50,6 +50,14 @@ public interface AnimalApi {
     @Operation(summary = "Get animal count by unit ID", description = "Returns the animal count of an unit by its ID")
     Integer countAnimalsByUnit(@PathVariable Long unitId);
 
+    @GetMapping("count")
+    @Operation(summary = "Get animal count", description = "Returns the animal count")
+    Integer countAll();
+
+    @GetMapping("count/specie")
+    @Operation(summary = "Get animal count by specie", description = "Returns the animal count by specie")
+    Integer countBySpecie();
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an animal", description = "Deletes an animal by its ID")

@@ -46,6 +46,10 @@ public interface UnitApi {
     @Operation(summary = "Get unit by ID", description = "Returns the details of a unit by its ID")
     UnitResponseDTO findById(@Parameter(description = "ID of the unit to be fetched") @PathVariable Long id);
 
+    @GetMapping("count")
+    @Operation(summary = "Get unit count", description = "Returns the unit count")
+    Integer countAll();
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a unit", description = "Deletes a unit by its ID")

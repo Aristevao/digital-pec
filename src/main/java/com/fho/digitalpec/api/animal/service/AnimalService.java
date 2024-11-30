@@ -90,6 +90,15 @@ public class AnimalService {
         return repository.countAnimalsByUnitId(unitId);
     }
 
+    public Integer countAll() {
+        return repository.countAnimalsByUserId(LoggedUser.getLoggedInUserId());
+    }
+
+    public Integer countBySpecie() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'countBySpecie'");
+    }
+
     public void deleteById(Long id) {
         findById(id);
         repository.deleteById(id);

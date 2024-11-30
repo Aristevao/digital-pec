@@ -17,4 +17,6 @@ public interface UnitRepository extends JpaRepository<Unit, Long> {
     Optional<Unit> findByName(String name);
 
     Page<Unit> findAllByUserId(Long loggedInUserId, Pageable pageable);
+
+    Integer countByUserId(Long userId);
 }

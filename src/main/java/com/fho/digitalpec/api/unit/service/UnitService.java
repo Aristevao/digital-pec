@@ -77,6 +77,10 @@ public class UnitService {
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, Unit.class, id));
     }
 
+    public Integer countAll() {
+        return repository.countByUserId(LoggedUser.getLoggedInUserId());
+    }
+
     public void deleteById(Long id) {
         findById(id);
         repository.deleteById(id);

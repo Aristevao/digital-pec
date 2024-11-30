@@ -18,4 +18,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
     Optional<Animal> findByIdAndUserId(Long id, Long userId);
 
     Integer countAnimalsByUnitId(Long unitId);
+
+    Integer countAnimalsByUserId(Long userId);
 }
