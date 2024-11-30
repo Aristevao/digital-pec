@@ -3,13 +3,6 @@ package com.fho.digitalpec.api.animal.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
-import com.fho.digitalpec.api.animal.dto.AnimalDTO;
-import com.fho.digitalpec.api.animal.entity.Animal;
-import com.fho.digitalpec.api.animal.mapper.AnimalMapper;
-import com.fho.digitalpec.api.animal.service.AnimalService;
-import com.fho.digitalpec.utils.mapper.SimpleDTO;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
+import com.fho.digitalpec.api.animal.dto.AnimalDTO;
+import com.fho.digitalpec.api.animal.dto.AnimalStatus;
+import com.fho.digitalpec.api.animal.entity.Animal;
+import com.fho.digitalpec.api.animal.mapper.AnimalMapper;
+import com.fho.digitalpec.api.animal.service.AnimalControlService;
+import com.fho.digitalpec.api.animal.service.AnimalService;
+import com.fho.digitalpec.utils.mapper.SimpleDTO;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AnimalController implements AnimalApi {
 
     private final AnimalService service;
+    private final AnimalControlService controleService;
     private final AnimalMapper mapper;
 
     @Override
@@ -84,5 +88,20 @@ public class AnimalController implements AnimalApi {
     public void delete(@PathVariable Long id) {
         log.info("Deleting the animal with id: {}.", id);
         service.deleteById(id);
+    }
+
+    @Override
+    public String animalLeft() {
+        return controleService.animalExited();
+    }
+
+    @Override
+    public String animalReturned() {
+        return controleService.animalReturned();
+    }
+
+    @Override
+    public AnimalStatus getStatus() {
+        return controleService.getStatus();
     }
 }
