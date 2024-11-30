@@ -1,7 +1,7 @@
 package com.fho.digitalpec.api.animal.controller;
 
-
 import java.util.List;
+import java.util.Map;
 
 import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.dto.AnimalDTO;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @RestController
@@ -76,9 +75,9 @@ public class AnimalController implements AnimalApi {
     }
 
     @Override
-    public Integer countBySpecie() {
+    public Map<String, Long> countBySpecies() {
         log.info("Getting animal's count by species");
-        return service.countBySpecie();
+        return service.countBySpecies();
     }
 
     @Override

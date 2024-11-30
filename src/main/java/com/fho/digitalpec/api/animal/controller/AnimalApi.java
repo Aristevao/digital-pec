@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.animal.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.dto.AnimalDTO;
@@ -32,7 +33,7 @@ public interface AnimalApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update an existing animal", description = "Updates the details of an existing animal by its ID")
     void update(@Parameter(description = "ID of the animal to be updated") @PathVariable Long id,
-                @Valid @RequestBody AnimalDTO dto);
+            @Valid @RequestBody AnimalDTO dto);
 
     @GetMapping
     @Operation(summary = "Find all animals", description = "Returns a paginated list of all animals")
@@ -56,7 +57,7 @@ public interface AnimalApi {
 
     @GetMapping("count/specie")
     @Operation(summary = "Get animal count by specie", description = "Returns the animal count by specie")
-    Integer countBySpecie();
+    public Map<String, Long> countBySpecies();
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

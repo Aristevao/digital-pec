@@ -3,6 +3,8 @@ package com.fho.digitalpec.api.animal.service;
 import static java.lang.String.format;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
@@ -48,10 +50,10 @@ public class AnimalService {
 
         repository.save(entity);
 
-//        TODO: Upload picture to S3
-//        if (Objects.nonNull(dto.getPicture())) {
-//            animalFileStorage.uploadImage(animal.getId(), dto.getPicture());
-//        }
+        // TODO: Upload picture to S3
+        // if (Objects.nonNull(dto.getPicture())) {
+        // animalFileStorage.uploadImage(animal.getId(), dto.getPicture());
+        // }
     }
 
     public void update(Long id, Animal entity) {
@@ -94,9 +96,14 @@ public class AnimalService {
         return repository.countAnimalsByUserId(LoggedUser.getLoggedInUserId());
     }
 
-    public Integer countBySpecie() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'countBySpecie'");
+    public Map<String, Long> countBySpecies() {
+        List<Object[]> results = repository.countAnimalsBySpecies();
+
+        return results.stream()
+                .collect(Collectors.toMap(
+                        result -> (String) result[0], // Specie
+                        result -> (Long) result[1] // Count
+                ));
     }
 
     public void deleteById(Long id) {
@@ -110,7 +117,8 @@ public class AnimalService {
                 .ifPresent(animal -> {
                     if (!animal.getId().equals(id)) {
                         throw new ConflictException(ErrorCode.DUPLICATED_ANIMAL_ID,
-                                format("An animal with the same identification already exists: '%s'.", entity.getIdentification()));
+                                format("An animal with the same identification already exists: '%s'.",
+                                        entity.getIdentification()));
                     }
                 });
     }
