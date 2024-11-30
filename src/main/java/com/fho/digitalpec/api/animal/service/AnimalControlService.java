@@ -29,9 +29,7 @@ public class AnimalControlService {
         Long loggedUserId = LoggedUser.getLoggedInUserId();
         Optional<AnimalControl> animalControlOpt = repository.findByUserId(loggedUserId);
 
-        if (animalControlOpt.isPresent()) {
-            animalControl.setId(animalControlOpt.get().getId());
-        }
+        animalControlOpt.ifPresent(control -> animalControl.setId(control.getId()));
 
         animalControl.setUser(userService.findById(loggedUserId));
 
@@ -41,25 +39,28 @@ public class AnimalControlService {
     public String animalExited() {
         AnimalControl animalControl = getAnimalControl();
 
-        animalControl.setTotalExiting(animalControl.getTotalExiting() + 1);
+        animalControl.setTotalOutside(animalControl.getTotalOutside() + 1);
+
+        if (animalControl.getTotalOutside() > animalControl.getAnimalsQuantity()) {
+            return "All animals are already outside: " + (animalControl.getTotalOutside() - 1);
+        }
 
         repository.save(animalControl);
 
-        return "Animal exited. Total animals outside: " + animalControl.getTotalExiting();
+        return "Animal exited. Total animals outside: " + animalControl.getTotalOutside();
     }
 
     public String animalReturned() {
         AnimalControl animalControl = getAnimalControl();
 
-        if (animalControl.getTotalReturning() < animalControl.getTotalExiting()) {
-            animalControl.setTotalReturning(animalControl.getTotalReturning() + 1);
+        if (animalControl.getTotalOutside() - 1 >= 0) {
+            animalControl.setTotalOutside(animalControl.getTotalOutside() - 1);
 
             repository.save(animalControl);
 
-            return "Animal returned. Total animals inside: " + animalControl.getTotalReturning();
+            return "Animal returned. Total animals outside: " + animalControl.getTotalOutside();
         } else {
-            animalControl.setTotalExiting(0);
-            animalControl.setTotalReturning(0);
+            animalControl.setTotalOutside(0);
             repository.save(animalControl);
 
             return "All animals have already returned.";

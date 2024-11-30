@@ -31,11 +31,8 @@ public class AnimalControl {
     private Long id;
 
     @Column
-    private int totalExiting;
+    private int totalOutside;
 
-    @Column
-    private int totalReturning;
-    
     @Column
     private int animalsQuantity;
 

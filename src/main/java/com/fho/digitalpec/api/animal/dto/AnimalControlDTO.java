@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AnimalControlDTO {
 
-    private int totalExiting;
-    private int totalReturning;
-    private int difference;
+    private int totalOutside;
+    private int totalInside;
 
     @NotNull
     private int animalsQuantity;
