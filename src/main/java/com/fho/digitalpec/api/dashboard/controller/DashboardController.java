@@ -1,16 +1,24 @@
 package com.fho.digitalpec.api.dashboard.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fho.digitalpec.api.dashboard.dto.VaccinationStatusDTO;
+import com.fho.digitalpec.api.dashboard.service.VaccinationStatusService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/api/dashboard")
+@RequiredArgsConstructor
+@RequestMapping("dashboard")
 public class DashboardController {
+
+    private final VaccinationStatusService vaccinationStatusService;
 
     @GetMapping("/data")
     public ResponseEntity<Map<String, Object>> getDashboardData() {
@@ -34,5 +42,11 @@ public class DashboardController {
         weather.put("description", "Ensolarado");
         weather.put("temperature", "28");
         return ResponseEntity.ok(weather);
+    }
+
+    @GetMapping("vaccination-status")
+    public ResponseEntity<List<VaccinationStatusDTO>> getVaccinationStatus() {
+        List<VaccinationStatusDTO> status = vaccinationStatusService.getVaccinationStatus();
+        return ResponseEntity.ok(status);
     }
 }

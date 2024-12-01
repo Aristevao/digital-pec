@@ -21,4 +21,14 @@ public interface AnimalVaccineRepository extends JpaRepository<AnimalVaccine, Lo
     List<AnimalVaccine> findNextVaccinationDatesIn4DaysInterval(LocalDate fourDaysFromNow);
 
     List<AnimalVaccine> findByVaccineId(Long vaccineId);
+
+    @Query("SELECT a.name, a.identification, v.name, av.applicationDate, nv.applicationDate " +
+            "FROM Animal a " +
+            "JOIN AnimalVaccine av ON av.animal.id = a.id " +
+            "JOIN Vaccine v ON v.id = av.vaccine.id " +
+            "LEFT JOIN NextApplicationDate nv ON nv.animalVaccine.id = av.id " +
+            "WHERE a.user.id = :userId")
+    List<Object[]> findVaccinationStatusByUser(Long userId);
+
+    List<AnimalVaccine> findByAnimalId(Long animalId);
 }

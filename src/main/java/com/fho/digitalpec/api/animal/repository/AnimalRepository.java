@@ -24,4 +24,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
 
     @Query("SELECT a.specie, COUNT(a) FROM Animal a GROUP BY a.specie")
     List<Object[]> countAnimalsBySpecies();
+
+    List<Animal> findByUserId(Long userId);
 }
