@@ -65,14 +65,12 @@ public class DashboardController {
     }
 
     @GetMapping("animal-entries")
-    public ResponseEntity<List<Map<String, Object>>> getAnimalEntries() {
-        List<Map<String, Object>> evolutionData = animalService.getAnimalEntries();
-        return ResponseEntity.ok(evolutionData);
+    public List<Map<String, Object>> getAnimalEntries() {
+        return animalService.getAnimalEntries();
     }
 
     @GetMapping("animal-evolution")
-    public ResponseEntity<List<Map<String, Object>>> getAnimalEvolution() {
-        List<Map<String, Object>> evolutionData = animalService.getAnimalEntries();
-        return ResponseEntity.ok(evolutionData);
+    public List<Map<String, Object>> getAnimalEvolution() {
+        return animalService.getAnimalEvolution();
     }
 }

@@ -42,5 +42,16 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
             "FROM Animal a WHERE a.user.id = :userId " +
             "GROUP BY EXTRACT(YEAR FROM a.registrationDate), EXTRACT(MONTH FROM a.registrationDate), a.specie " +
             "ORDER BY EXTRACT(YEAR FROM a.registrationDate), EXTRACT(MONTH FROM a.registrationDate)")
-    List<AnimalEvolutionProjection> findAnimalEvolutionByUserId(Long userId);
+    List<AnimalEvolutionProjection> findAnimalEntriesByUserId(Long userId);
+
+    @Query("SELECT " +
+            "EXTRACT(YEAR FROM a.registrationDate) AS year, " +
+            "EXTRACT(MONTH FROM a.registrationDate) AS month, " +
+            "a.specie AS specie, " +
+            "COUNT(a) AS count " +
+            "FROM Animal a " +
+            "WHERE a.user.id = :userId " +
+            "GROUP BY year, month, a.specie " +
+            "ORDER BY year, month")
+    List<Object[]> findAnimalEvolutionByUserId(Long userId);
 }

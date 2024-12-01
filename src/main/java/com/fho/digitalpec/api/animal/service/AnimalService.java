@@ -5,9 +5,11 @@ import static java.lang.String.format;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -145,7 +147,7 @@ public class AnimalService {
     }
 
     public List<Map<String, Object>> getAnimalEntries() {
-        List<AnimalEvolutionProjection> rawData = repository.findAnimalEvolutionByUserId(LoggedUser.getLoggedInUserId());
+        List<AnimalEvolutionProjection> rawData = repository.findAnimalEntriesByUserId(LoggedUser.getLoggedInUserId());
 
         Map<String, Map<String, Long>> monthlyData = new TreeMap<>(); // Garantir ordenação por mês
         Map<String, Long> accumulatedTotals = new HashMap<>();
@@ -191,5 +193,64 @@ public class AnimalService {
                                         entity.getIdentification()));
                     }
                 });
+    }
+
+    public List<Map<String, Object>> getAnimalEvolution() {
+        List<Object[]> results = repository.findAnimalEvolutionByUserId(LoggedUser.getLoggedInUserId());
+
+        // Estruturas para acumular dados
+        Map<String, Map<String, Long>> cumulativeData = new LinkedHashMap<>();
+        Map<String, Long> totalPerSpecie = new HashMap<>();
+        Set<String> allSpecies = new HashSet<>();
+
+        // Iterar nos resultados e construir o acumulado
+        for (Object[] result : results) {
+            int year = ((Number) result[0]).intValue();
+            int month = ((Number) result[1]).intValue();
+            String specie = (String) result[2];
+            long count = ((Number) result[3]).longValue();
+
+            String monthKey = String.format("%02d-%d", month, year);
+
+            // Adicionar ao conjunto de espécies conhecidas
+            allSpecies.add(specie);
+
+            // Inicializar o mês se não existir
+            cumulativeData.putIfAbsent(monthKey, new HashMap<>());
+            Map<String, Long> monthData = cumulativeData.get(monthKey);
+
+            // Atualizar contagem acumulada
+            totalPerSpecie.put(specie, totalPerSpecie.getOrDefault(specie, 0L) + count);
+            monthData.put(specie, totalPerSpecie.get(specie));
+        }
+
+        // Preencher meses ausentes para cada espécie
+        List<String> sortedMonths = new ArrayList<>(cumulativeData.keySet());
+        sortedMonths.sort(String::compareTo);
+
+        for (int i = 1; i < sortedMonths.size(); i++) {
+            String currentMonth = sortedMonths.get(i);
+            String previousMonth = sortedMonths.get(i - 1);
+
+            Map<String, Long> currentData = cumulativeData.get(currentMonth);
+            Map<String, Long> previousData = cumulativeData.get(previousMonth);
+
+            for (String specie : allSpecies) {
+                // Se a espécie não existir no mês atual, copiar do mês anterior
+                currentData.putIfAbsent(specie, previousData.getOrDefault(specie, 0L));
+            }
+        }
+
+        // Converter para a estrutura de retorno
+        List<Map<String, Object>> response = new ArrayList<>();
+        cumulativeData.forEach((month, data) -> {
+            Map<String, Object> monthEntry = new LinkedHashMap<>();
+            monthEntry.put("month", month);
+            monthEntry.put("total", data.values().stream().mapToLong(Long::longValue).sum());
+            monthEntry.putAll(data);
+            response.add(monthEntry);
+        });
+
+        return response;
     }
 }
