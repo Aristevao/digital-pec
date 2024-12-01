@@ -174,9 +174,7 @@ public class AnimalService {
             responseEntry.put("month", monthYear);
             responseEntry.put("total", cumulativeTotal += accumulatedTotals.get(monthYear));
 
-            for (Map.Entry<String, Long> specieEntry : speciesData.entrySet()) {
-                responseEntry.put(specieEntry.getKey(), specieEntry.getValue());
-            }
+            responseEntry.putAll(speciesData);
 
             result.add(responseEntry);
         }
@@ -198,12 +196,12 @@ public class AnimalService {
     public List<Map<String, Object>> getAnimalEvolution() {
         List<Object[]> results = repository.findAnimalEvolutionByUserId(LoggedUser.getLoggedInUserId());
 
-        // Estruturas para acumular dados
+        // Structures to accumulate data
         Map<String, Map<String, Long>> cumulativeData = new LinkedHashMap<>();
         Map<String, Long> totalPerSpecie = new HashMap<>();
         Set<String> allSpecies = new HashSet<>();
 
-        // Iterar nos resultados e construir o acumulado
+        // Iterate over results and build cumulative data
         for (Object[] result : results) {
             int year = ((Number) result[0]).intValue();
             int month = ((Number) result[1]).intValue();
@@ -212,19 +210,19 @@ public class AnimalService {
 
             String monthKey = String.format("%02d-%d", month, year);
 
-            // Adicionar ao conjunto de espécies conhecidas
+            // Add to the set of known species
             allSpecies.add(specie);
 
-            // Inicializar o mês se não existir
+            // Initialize the month if it doesn't exist
             cumulativeData.putIfAbsent(monthKey, new HashMap<>());
             Map<String, Long> monthData = cumulativeData.get(monthKey);
 
-            // Atualizar contagem acumulada
+            // Update cumulative count
             totalPerSpecie.put(specie, totalPerSpecie.getOrDefault(specie, 0L) + count);
             monthData.put(specie, totalPerSpecie.get(specie));
         }
 
-        // Preencher meses ausentes para cada espécie
+        // Fill in missing months for each species
         List<String> sortedMonths = new ArrayList<>(cumulativeData.keySet());
         sortedMonths.sort(String::compareTo);
 
@@ -236,12 +234,12 @@ public class AnimalService {
             Map<String, Long> previousData = cumulativeData.get(previousMonth);
 
             for (String specie : allSpecies) {
-                // Se a espécie não existir no mês atual, copiar do mês anterior
+                // If the species does not exist in the current month, copy from the previous month
                 currentData.putIfAbsent(specie, previousData.getOrDefault(specie, 0L));
             }
         }
 
-        // Converter para a estrutura de retorno
+        // Convert to the return structure
         List<Map<String, Object>> response = new ArrayList<>();
         cumulativeData.forEach((month, data) -> {
             Map<String, Object> monthEntry = new LinkedHashMap<>();
