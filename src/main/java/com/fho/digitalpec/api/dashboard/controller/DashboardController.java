@@ -64,9 +64,15 @@ public class DashboardController {
         return animalService.getAnimalGrowthByPeriod(start, end);
     }
 
+    @GetMapping("animal-entries")
+    public ResponseEntity<List<Map<String, Object>>> getAnimalEntries() {
+        List<Map<String, Object>> evolutionData = animalService.getAnimalEntries();
+        return ResponseEntity.ok(evolutionData);
+    }
+
     @GetMapping("animal-evolution")
     public ResponseEntity<List<Map<String, Object>>> getAnimalEvolution() {
-        List<Map<String, Object>> evolutionData = animalService.getAnimalEvolution();
+        List<Map<String, Object>> evolutionData = animalService.getAnimalEntries();
         return ResponseEntity.ok(evolutionData);
     }
 }

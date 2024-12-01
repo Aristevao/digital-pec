@@ -144,7 +144,7 @@ public class AnimalService {
         return growthDTOList;
     }
 
-    public List<Map<String, Object>> getAnimalEvolution() {
+    public List<Map<String, Object>> getAnimalEntries() {
         List<AnimalEvolutionProjection> rawData = repository.findAnimalEvolutionByUserId(LoggedUser.getLoggedInUserId());
 
         Map<String, Map<String, Long>> monthlyData = new TreeMap<>(); // Garantir ordenação por mês
