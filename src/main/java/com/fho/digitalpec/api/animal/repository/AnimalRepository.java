@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fho.digitalpec.api.animal.entity.Animal;
+import com.fho.digitalpec.api.dashboard.dto.AnimalEvolutionProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +35,12 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
             "GROUP BY a.registrationDate, a.specie " +
             "ORDER BY a.registrationDate ASC")
     List<Object[]> countAnimalsByRegistrationDate(LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT EXTRACT(MONTH FROM a.registrationDate) AS month, " +
+            "EXTRACT(YEAR FROM a.registrationDate) AS year, " +
+            "a.specie AS specie, COUNT(a) AS count " +
+            "FROM Animal a WHERE a.user.id = :userId " +
+            "GROUP BY EXTRACT(YEAR FROM a.registrationDate), EXTRACT(MONTH FROM a.registrationDate), a.specie " +
+            "ORDER BY EXTRACT(YEAR FROM a.registrationDate), EXTRACT(MONTH FROM a.registrationDate)")
+    List<AnimalEvolutionProjection> findAnimalEvolutionByUserId(Long userId);
 }

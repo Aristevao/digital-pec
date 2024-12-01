@@ -5,14 +5,17 @@ import static java.lang.String.format;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.repository.AnimalRepository;
 import com.fho.digitalpec.api.animal.repository.AnimalSpecification;
+import com.fho.digitalpec.api.dashboard.dto.AnimalEvolutionProjection;
 import com.fho.digitalpec.api.dashboard.dto.AnimalGrowthDTO;
 import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.unit.service.UnitService;
@@ -139,6 +142,44 @@ public class AnimalService {
         }
 
         return growthDTOList;
+    }
+
+    public List<Map<String, Object>> getAnimalEvolution() {
+        List<AnimalEvolutionProjection> rawData = repository.findAnimalEvolutionByUserId(LoggedUser.getLoggedInUserId());
+
+        Map<String, Map<String, Long>> monthlyData = new TreeMap<>(); // Garantir ordenação por mês
+        Map<String, Long> accumulatedTotals = new HashMap<>();
+
+        for (AnimalEvolutionProjection data : rawData) {
+            String monthYear = String.format("%02d-%d", data.getMonth(), data.getYear());
+            monthlyData.putIfAbsent(monthYear, new HashMap<>());
+
+            Map<String, Long> speciesData = monthlyData.get(monthYear);
+            speciesData.put(data.getSpecie(), speciesData.getOrDefault(data.getSpecie(), 0L) + data.getCount());
+
+            accumulatedTotals.put(monthYear, accumulatedTotals.getOrDefault(monthYear, 0L) + data.getCount());
+        }
+
+        // Construir a lista de resposta
+        List<Map<String, Object>> result = new ArrayList<>();
+        long cumulativeTotal = 0;
+
+        for (Map.Entry<String, Map<String, Long>> entry : monthlyData.entrySet()) {
+            String monthYear = entry.getKey();
+            Map<String, Long> speciesData = entry.getValue();
+
+            Map<String, Object> responseEntry = new LinkedHashMap<>();
+            responseEntry.put("month", monthYear);
+            responseEntry.put("total", cumulativeTotal += accumulatedTotals.get(monthYear));
+
+            for (Map.Entry<String, Long> specieEntry : speciesData.entrySet()) {
+                responseEntry.put(specieEntry.getKey(), specieEntry.getValue());
+            }
+
+            result.add(responseEntry);
+        }
+
+        return result;
     }
 
     private void validateIdentificationUniqueness(Animal entity, Long id) {
