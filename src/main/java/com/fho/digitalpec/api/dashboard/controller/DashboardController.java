@@ -1,14 +1,18 @@
 package com.fho.digitalpec.api.dashboard.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fho.digitalpec.api.animal.service.AnimalService;
+import com.fho.digitalpec.api.dashboard.dto.AnimalGrowthDTO;
 import com.fho.digitalpec.api.dashboard.dto.VaccinationStatusDTO;
 import com.fho.digitalpec.api.dashboard.service.VaccinationStatusService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class DashboardController {
 
     private final VaccinationStatusService vaccinationStatusService;
+    private final AnimalService animalService;
 
     @GetMapping("/data")
     public ResponseEntity<Map<String, Object>> getDashboardData() {
@@ -48,5 +53,14 @@ public class DashboardController {
     public ResponseEntity<List<VaccinationStatusDTO>> getVaccinationStatus() {
         List<VaccinationStatusDTO> status = vaccinationStatusService.getVaccinationStatus();
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("animal-growth")
+    public List<AnimalGrowthDTO> getAnimalGrowth(@RequestParam("startDate") String startDate,
+                                                 @RequestParam("endDate") String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        return animalService.getAnimalGrowthByPeriod(start, end);
     }
 }

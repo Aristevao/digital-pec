@@ -2,6 +2,9 @@ package com.fho.digitalpec.api.animal.service;
 
 import static java.lang.String.format;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +13,7 @@ import com.fho.digitalpec.api.animal.dto.AnimalCriteria;
 import com.fho.digitalpec.api.animal.entity.Animal;
 import com.fho.digitalpec.api.animal.repository.AnimalRepository;
 import com.fho.digitalpec.api.animal.repository.AnimalSpecification;
+import com.fho.digitalpec.api.dashboard.dto.AnimalGrowthDTO;
 import com.fho.digitalpec.api.specie.service.SpecieService;
 import com.fho.digitalpec.api.unit.service.UnitService;
 import com.fho.digitalpec.api.user.service.UserService;
@@ -110,6 +114,31 @@ public class AnimalService {
         findById(id);
         repository.deleteById(id);
         log.info("Animal '{}' was successfully deleted.", id);
+    }
+
+    public List<AnimalGrowthDTO> getAnimalGrowthByPeriod(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = repository.countAnimalsByRegistrationDate(startDate, endDate);
+
+        Map<LocalDate, Map<String, Long>> growthData = new HashMap<>();
+
+        for (Object[] result : results) {
+            LocalDate registrationDate = (LocalDate) result[0];
+            String specie = (String) result[1];
+            Long total = (Long) result[2];
+
+            growthData.computeIfAbsent(registrationDate, k -> new HashMap<>())
+                    .put(specie, total);
+        }
+
+        List<AnimalGrowthDTO> growthDTOList = new ArrayList<>();
+
+        for (Map.Entry<LocalDate, Map<String, Long>> entry : growthData.entrySet()) {
+            LocalDate date = entry.getKey();
+            Map<String, Long> speciesCount = entry.getValue();
+            growthDTOList.add(new AnimalGrowthDTO(date, speciesCount));
+        }
+
+        return growthDTOList;
     }
 
     private void validateIdentificationUniqueness(Animal entity, Long id) {

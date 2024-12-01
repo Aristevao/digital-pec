@@ -1,5 +1,6 @@
 package com.fho.digitalpec.api.animal.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,11 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
     List<Object[]> countAnimalsBySpecies();
 
     List<Animal> findByUserId(Long userId);
+
+    @Query("SELECT a.registrationDate AS registrationDate, a.specie AS specie, COUNT(a) AS total " +
+            "FROM Animal a " +
+            "WHERE a.registrationDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY a.registrationDate, a.specie " +
+            "ORDER BY a.registrationDate ASC")
+    List<Object[]> countAnimalsByRegistrationDate(LocalDate startDate, LocalDate endDate);
 }
