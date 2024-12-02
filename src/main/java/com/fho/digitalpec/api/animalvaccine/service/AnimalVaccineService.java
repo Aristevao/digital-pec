@@ -57,6 +57,7 @@ public class AnimalVaccineService {
         }
 
         AnimalVaccine animalVaccine = repository.save(entity);
+        entity.setCompleted(dto.getCompleted());
 
         nextApplicationDateService.update(animalVaccine, dto.getNextApplicationDates());
     }
