@@ -43,6 +43,6 @@ public class AnimalVaccine {
     @Column(name = "application_date")
     private LocalDate applicationDate;
 
-    @OneToMany(mappedBy = "animalVaccine", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "animalVaccine", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<NextApplicationDate> nextApplicationDates;
 }

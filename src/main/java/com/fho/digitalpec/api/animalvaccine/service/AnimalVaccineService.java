@@ -1,6 +1,7 @@
 package com.fho.digitalpec.api.animalvaccine.service;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +34,13 @@ public class AnimalVaccineService {
 
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
-        if (!dto.getNextApplicationDates().isEmpty()) {
+
+        boolean allPastApplicationDates = dto.getNextApplicationDates().stream()
+                .allMatch(nextApplicationDate -> nextApplicationDate.isBefore(LocalDate.now()));
+
+        if (!dto.getNextApplicationDates().isEmpty() && allPastApplicationDates) {
+            entity.setCompleted(TRUE);
+        } else if (!dto.getNextApplicationDates().isEmpty()) {
             entity.setCompleted(FALSE);
         }
 
