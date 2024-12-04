@@ -97,4 +97,8 @@ public class NextApplicationDateService {
 
         animalVaccineService.save(entity);
     }
+
+    public void deleteAllByAnimalVaccineId(Long animalVaccineId) {
+        repository.deleteAllByAnimalVaccineId(animalVaccineId);
+    }
 }

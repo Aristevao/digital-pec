@@ -26,6 +26,7 @@ public class AnimalVaccineController implements AnimalVaccineApi {
     private final AnimalVaccineService service;
     private final AnimalVaccineMapper mapper;
 
+
     @Override
     public void create(@Valid @RequestBody AnimalVaccineDTO dto) {
         log.info("Creating AnimalVaccine. Payload: {}.", dto);

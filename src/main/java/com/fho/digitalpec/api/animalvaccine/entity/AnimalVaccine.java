@@ -40,7 +40,7 @@ public class AnimalVaccine {
     @Column(name = "completed")
     private Boolean completed;
 
-    @Column(name = "application_date", nullable = false)
+    @Column(name = "application_date")
     private LocalDate applicationDate;
 
     @OneToMany(mappedBy = "animalVaccine", fetch = FetchType.EAGER)

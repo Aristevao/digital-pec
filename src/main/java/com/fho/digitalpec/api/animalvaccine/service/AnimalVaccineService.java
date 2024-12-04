@@ -33,10 +33,6 @@ public class AnimalVaccineService {
 
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
-        if (entity.getApplicationDate() == null) {
-            entity.setApplicationDate(LocalDate.now());
-        }
-
         if (!dto.getNextApplicationDates().isEmpty()) {
             entity.setCompleted(FALSE);
         }
@@ -58,9 +54,7 @@ public class AnimalVaccineService {
 
         AnimalVaccine animalVaccine = repository.save(entity);
 
-        if (!dto.getNextApplicationDates().isEmpty()) {
-            entity.setCompleted(FALSE);
-        } else {
+        if (isAllPastNextApplicationDates(entity)) {
             entity.setCompleted(dto.getCompleted());
         }
 
@@ -81,8 +75,10 @@ public class AnimalVaccineService {
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource, AnimalVaccine.class, id));
     }
 
+    @Transactional
     public void deleteById(Long id) {
         findById(id);
+        nextApplicationDateService.deleteAllByAnimalVaccineId(id);
         repository.deleteById(id);
         log.info("AnimalVaccine '{}' was successfully deleted.", id);
     }
@@ -99,5 +95,10 @@ public class AnimalVaccineService {
 
     public List<AnimalVaccine> findByVaccineId(Long vaccineId) {
         return repository.findByVaccineId(vaccineId);
+    }
+
+    private boolean isAllPastNextApplicationDates(AnimalVaccine entity) {
+        return entity.getNextApplicationDates().stream()
+                .allMatch(nextApplicationDate -> nextApplicationDate.getApplicationDate().isBefore(LocalDate.now()));
     }
 }
