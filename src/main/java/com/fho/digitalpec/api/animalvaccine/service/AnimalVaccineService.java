@@ -34,12 +34,7 @@ public class AnimalVaccineService {
 
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
-
-        if (!dto.getNextApplicationDates().isEmpty() && isAllPastNextApplicationDates(entity)) {
-            entity.setCompleted(TRUE);
-        } else if (!dto.getNextApplicationDates().isEmpty()) {
-            entity.setCompleted(FALSE);
-        }
+        setCompleted(entity, dto);
 
         AnimalVaccine animalVaccine = repository.save(entity);
 
@@ -52,15 +47,16 @@ public class AnimalVaccineService {
     public void update(Long id, AnimalVaccineDTO dto) {
         AnimalVaccine entity = findById(id);
 
+        entity.setApplicationDate(dto.getApplicationDate());
+        entity.setCompleted(dto.getCompleted());
+
+        setCompleted(entity, dto);
+
         if (dto.getApplicationDate() != null) {
             entity.setApplicationDate(dto.getApplicationDate());
         }
 
         AnimalVaccine animalVaccine = repository.save(entity);
-
-        if (isAllPastNextApplicationDates(entity)) {
-            entity.setCompleted(dto.getCompleted());
-        }
 
         nextApplicationDateService.update(animalVaccine, dto.getNextApplicationDates());
     }
@@ -101,8 +97,16 @@ public class AnimalVaccineService {
         return repository.findByVaccineId(vaccineId);
     }
 
-    private boolean isAllPastNextApplicationDates(AnimalVaccine entity) {
-        return entity.getNextApplicationDates().stream()
-                .allMatch(nextApplicationDate -> nextApplicationDate.getApplicationDate().isBefore(LocalDate.now()));
+    private void setCompleted(AnimalVaccine entity, AnimalVaccineDTO dto) {
+        if (!dto.getNextApplicationDates().isEmpty() && isAllPastNextApplicationDates(dto)) {
+            entity.setCompleted(TRUE);
+        } else if (!dto.getNextApplicationDates().isEmpty()) {
+            entity.setCompleted(FALSE);
+        }
+    }
+
+    private boolean isAllPastNextApplicationDates(AnimalVaccineDTO dto) {
+        return dto.getNextApplicationDates().stream()
+                .allMatch(nextApplicationDate -> nextApplicationDate.isBefore(LocalDate.now()));
     }
 }
