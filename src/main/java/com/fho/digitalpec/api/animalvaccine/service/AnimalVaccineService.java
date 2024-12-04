@@ -35,10 +35,7 @@ public class AnimalVaccineService {
     @Transactional
     public void create(AnimalVaccine entity, AnimalVaccineDTO dto) {
 
-        boolean allPastApplicationDates = dto.getNextApplicationDates().stream()
-                .allMatch(nextApplicationDate -> nextApplicationDate.isBefore(LocalDate.now()));
-
-        if (!dto.getNextApplicationDates().isEmpty() && allPastApplicationDates) {
+        if (!dto.getNextApplicationDates().isEmpty() && isAllPastNextApplicationDates(entity)) {
             entity.setCompleted(TRUE);
         } else if (!dto.getNextApplicationDates().isEmpty()) {
             entity.setCompleted(FALSE);
